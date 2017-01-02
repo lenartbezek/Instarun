@@ -17,28 +17,16 @@ import java.util.LinkedList;
 
 public class TrackRecorder implements LocationListener, SensorEventListener {
 
-    private final static String TAG = "StepDetector";
-    private float   mLimit = 10;
-    private float   mLastValues[] = new float[3*2];
-    private float   mScale[] = new float[2];
-    private float   mYOffset;
-
-    private float   mLastDirections[] = new float[3*2];
-    private float   mLastExtremes[][] = { new float[3*2], new float[3*2] };
-    private float   mLastDiff[] = new float[3*2];
-    private int     mLastMatch = -1;
-
     private boolean              tracking;
     private LinkedList<Location> track;
     private int                  steps;
 
     private static TrackRecorder singleton;
+    private static LocationManager locationManager;
+    private static SensorManager sensorManager;
+    private static Sensor sensor;
 
     private TrackRecorder(){
-        int h = 480;
-        mYOffset = h * 0.5f;
-        mScale[0] = - (h * 0.5f * (1.0f / (SensorManager.STANDARD_GRAVITY * 2)));
-        mScale[1] = - (h * 0.5f * (1.0f / (SensorManager.MAGNETIC_FIELD_EARTH_MAX)));
         track = new LinkedList<Location>();
     }
 
@@ -86,49 +74,17 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
         if (!tracking) return;
 
         Sensor sensor = event.sensor;
-        synchronized (this) {
-            if (sensor.getType() == Sensor.TYPE_ORIENTATION) {
-                // PASS
-            } else {
-                int j = (sensor.getType() == Sensor.TYPE_ACCELEROMETER) ? 1 : 0;
-                if (j == 1) {
-                    float vSum = 0;
-                    for (int i=0 ; i<3 ; i++) {
-                        final float v = mYOffset + event.values[i] * mScale[j];
-                        vSum += v;
-                    }
-                    int k = 0;
-                    float v = vSum / 3;
+        float[] values = event.values;
+        int value = -1;
 
-                    float direction = (v > mLastValues[k] ? 1 : (v < mLastValues[k] ? -1 : 0));
-                    if (direction == - mLastDirections[k]) {
-                        // Direction changed
-                        int extType = (direction > 0 ? 0 : 1); // minumum or maximum?
-                        mLastExtremes[extType][k] = mLastValues[k];
-                        float diff = Math.abs(mLastExtremes[extType][k] - mLastExtremes[1 - extType][k]);
+        if (values.length > 0) {
+            value = (int) values[0];
+        }
 
-                        if (diff > mLimit) {
-
-                            boolean isAlmostAsLargeAsPrevious = diff > (mLastDiff[k]*2/3);
-                            boolean isPreviousLargeEnough = mLastDiff[k] > (diff/3);
-                            boolean isNotContra = (mLastMatch != 1 - extType);
-
-                            if (isAlmostAsLargeAsPrevious && isPreviousLargeEnough && isNotContra) {
-                                Log.i(TAG, "step");
-                                steps++;
-                                onUpdate();
-                                mLastMatch = extType;
-                            }
-                            else {
-                                mLastMatch = -1;
-                            }
-                        }
-                        mLastDiff[k] = diff;
-                    }
-                    mLastDirections[k] = direction;
-                    mLastValues[k] = v;
-                }
-            }
+        if (sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+            steps += value;
+        } else if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
+            steps += value;
         }
     }
 
@@ -161,16 +117,8 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
         singleton = new TrackRecorder();
 
         // Initialize location manager and sensor manager
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-
-        // Register track recorder as sensor listener
-        Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(singleton, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-
-        // Register track recorder as location listener
-        locationManager.requestLocationUpdates(
-        LocationManager.GPS_PROVIDER, 5000, 10, singleton);
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
     }
 
     /**
@@ -180,13 +128,21 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
     public static void start(){
         singleton.track.clear();
         singleton.steps = 0;
-        singleton.tracking = true;
+
+        resume();
     }
 
     /**
      * Resumes recording.
      */
     public static void resume(){
+        // Register track recorder as sensor listener
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        sensorManager.registerListener(singleton, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+        // Register track recorder as location listener
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, singleton);
+
         singleton.tracking = true;
     }
 
@@ -194,6 +150,8 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
      * Stops recording. Can be resumed.
      */
     public static void stop(){
+        sensorManager.unregisterListener(singleton);
+        locationManager.removeUpdates(singleton);
         singleton.tracking = false;
     }
 
