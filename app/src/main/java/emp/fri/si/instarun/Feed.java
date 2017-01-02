@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
-import android.widget.TextView;
 import emp.fri.si.instarun.model.Person;
 import emp.fri.si.instarun.model.Run;
 
@@ -54,8 +53,8 @@ public class Feed extends AppCompatActivity {
                 p.name = "Asfalt Makedamovič";
                 Run r = new Run();
                 r.owner = p;
-                r.runLength = 1234;
-                r.runSteps = 6666;
+                r.length = 1234;
+                r.steps = 6666;
                 r.title = "Jutranji tek";
                 return r;
             }

@@ -1,14 +1,18 @@
 package emp.fri.si.instarun.model;
 
-/**
- * Created by Lenart on 19-Dec-16.
- */
+import android.location.Location;
+
+import java.util.List;
+
 public class Run {
 
     public Person owner;
 
     public String title;
-    public float runLength;
-    public long runSteps;
+
+    public float length;
+    public long steps;
+
+    public List<Location> track;
 
 }

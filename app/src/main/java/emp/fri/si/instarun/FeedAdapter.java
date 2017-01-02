@@ -51,8 +51,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
         Run r = dataset.get(i);
         holder.vTitle.setText(r.title);
         holder.vOwner.setText(r.owner.name);
-        holder.vLength.setText(r.runLength+"");
-        holder.vSteps.setText(r.runSteps+"");
+        holder.vLength.setText(r.length +"");
+        holder.vSteps.setText(r.steps +"");
     }
 
     // Return the size of your dataset (invoked by the layout manager)
