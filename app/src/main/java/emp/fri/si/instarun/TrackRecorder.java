@@ -9,7 +9,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import emp.fri.si.instarun.model.Run;
 
 import java.util.HashSet;
@@ -22,9 +21,12 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
     private int                  steps;
 
     private static TrackRecorder singleton;
+
     private static LocationManager locationManager;
     private static SensorManager sensorManager;
-    private static Sensor sensor;
+
+    private static Sensor stepCounterSensor;
+    private static Sensor stepDetectorSensor;
 
     private TrackRecorder(){
         track = new LinkedList<Location>();
@@ -137,8 +139,10 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
      */
     public static void resume(){
         // Register track recorder as sensor listener
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        sensorManager.registerListener(singleton, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        sensorManager.registerListener(singleton, stepCounterSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(singleton, stepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         // Register track recorder as location listener
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, singleton);
@@ -150,7 +154,8 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
      * Stops recording. Can be resumed.
      */
     public static void stop(){
-        sensorManager.unregisterListener(singleton);
+        sensorManager.unregisterListener(singleton, stepCounterSensor);
+        sensorManager.unregisterListener(singleton, stepDetectorSensor);
         locationManager.removeUpdates(singleton);
         singleton.tracking = false;
     }
