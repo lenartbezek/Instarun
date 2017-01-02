@@ -17,6 +17,7 @@ import java.util.*;
 public class Feed extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+    private FloatingActionButton fab;
     private RecyclerView.LayoutManager layoutManager;
     private FeedAdapter adapter;
 
@@ -27,7 +28,7 @@ public class Feed extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
