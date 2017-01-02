@@ -6,15 +6,14 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import java.util.Date;
 import java.util.LinkedList;
 
-public class RunRecorder implements LocationListener {
+public class TrackRecorder implements LocationListener {
 
     private boolean tracking;
     private LinkedList<Location> track;
 
-    private static RunRecorder instance;
+    private static TrackRecorder instance;
 
     @Override
     public void onLocationChanged(Location loc) {
@@ -41,25 +40,35 @@ public class RunRecorder implements LocationListener {
     public static void Initialize(Context context){
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-        instance = new RunRecorder();
+        instance = new TrackRecorder();
         locationManager.requestLocationUpdates(
-        LocationManager.GPS_PROVIDER, 1000, 5, instance);
+        LocationManager.GPS_PROVIDER, 5000, 10, instance);
     }
 
-    public void StartRun(){
-        track = new LinkedList<Location>();
-        tracking = true;
+    public static void Start(){
+        instance.track = new LinkedList<Location>();
+        instance.tracking = true;
     }
 
-    public void StopRun(){
-        tracking = false;
+    public static void Stop(){
+        instance.tracking = false;
     }
 
-    public LinkedList<Location> GetTrack(){
-        return track;
+    public static LinkedList<Location> GetTrack(){
+        return instance.track;
     }
 
-    public boolean IsTracking(){
-        return tracking;
+    public static float GetLength(){
+        float length = 0;
+        for (int i = 1; i < instance.track.size(); i++){
+            Location a = instance.track.get(i-1);
+            Location b = instance.track.get(i);
+            length += a.distanceTo(b);
+        }
+        return length;
+    }
+
+    public static boolean IsTracking(){
+        return instance.tracking;
     }
 }
