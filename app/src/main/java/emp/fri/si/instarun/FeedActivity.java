@@ -14,7 +14,7 @@ import emp.fri.si.instarun.model.Run;
 
 import java.util.*;
 
-public class Feed extends AppCompatActivity {
+public class FeedActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
@@ -32,11 +32,7 @@ public class Feed extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Intent intent = new Intent(Feed.this,
-                        Record.class);
-                startActivity(intent);
+                startRecordActivity();
             }
         });
 
@@ -68,6 +64,11 @@ public class Feed extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    private void startRecordActivity(){
+        Intent intent = new Intent(this, RecordActivity.class);
+        startActivity(intent);
     }
 
     @Override

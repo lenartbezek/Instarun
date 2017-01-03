@@ -16,14 +16,16 @@ import java.util.LinkedList;
 
 public class TrackRecorder implements LocationListener, SensorEventListener {
 
+    private boolean              ready;
     private boolean              tracking;
     private LinkedList<Location> track;
     private int                  steps;
+    private Location             currentLocation;
 
     private static TrackRecorder singleton;
 
     private static LocationManager locationManager;
-    private static SensorManager sensorManager;
+    private static SensorManager   sensorManager;
 
     private static Sensor stepCounterSensor;
     private static Sensor stepDetectorSensor;
@@ -42,7 +44,7 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
         }
     }
 
-    private static HashSet<UpdateListener> listeners;
+    private static HashSet<UpdateListener> listeners = new HashSet<UpdateListener>();
 
     /**
      * Adds UpdateListener to be called when getting a location or step update.
@@ -62,11 +64,19 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
         listeners.remove(listener);
     }
 
+    /**
+     * Clears all UpdateListeners. To be called on service destroy.
+     */
+    public static void clearUpdateListeners(){ listeners.clear(); }
+
     @Override
     public void onLocationChanged(Location loc) {
-        if (!tracking) return;
+        currentLocation = loc;
 
-        track.add(loc);
+        if (tracking){
+            track.add(loc);
+        }
+
         onUpdate();
     }
 
@@ -124,6 +134,23 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
     }
 
     /**
+     * Starts the sensors to pinpoint the location for accurate start.
+     */
+    public static void ready(){
+        // Register track recorder as sensor listener
+        stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        sensorManager.registerListener(singleton, stepCounterSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(singleton, stepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
+
+        // Register track recorder as location listener
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, singleton);
+        singleton.currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        singleton.ready = true;
+    }
+
+    /**
      * Starts recording or resets current progress.
      * Track recorder only logs steps and location when recording.
      */
@@ -138,30 +165,36 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
      * Resumes recording.
      */
     public static void resume(){
-        // Register track recorder as sensor listener
-        stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        sensorManager.registerListener(singleton, stepCounterSensor, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(singleton, stepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
-
-        // Register track recorder as location listener
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, singleton);
-
+        if (!singleton.ready) ready();
         singleton.tracking = true;
     }
 
     /**
-     * Stops recording. Can be resumed.
+     * Stops recording with intent of resuming it.
      */
-    public static void stop(){
-        sensorManager.unregisterListener(singleton, stepCounterSensor);
-        sensorManager.unregisterListener(singleton, stepDetectorSensor);
-        locationManager.removeUpdates(singleton);
+    public static void pause(){
         singleton.tracking = false;
     }
 
+    /**
+     * Stops recording and un-readies it.
+     */
+    public static void stop(){
+        if (singleton.ready){
+            sensorManager.unregisterListener(singleton, stepCounterSensor);
+            sensorManager.unregisterListener(singleton, stepDetectorSensor);
+            locationManager.removeUpdates(singleton);
+            singleton.ready = false;
+        }
+        pause();
+    }
+
     public static LinkedList<Location> getTrack(){
-        return singleton.track;
+        return singleton != null ? singleton.track : new LinkedList<Location>();
+    }
+
+    public static Location getCurrentLocation(){
+        return singleton.currentLocation;
     }
 
     public static float getLength(){
@@ -175,7 +208,7 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
     }
 
     public static int getSteps(){
-        return singleton.steps;
+         return singleton != null ? singleton.steps : 0;
     }
 
     /**
@@ -195,7 +228,7 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
      * Returns true if currently recording.
      * @return
      */
-    public static boolean isTracking(){
-        return singleton.tracking;
+    public static boolean isTracking() {
+        return singleton != null && singleton.tracking;
     }
 }

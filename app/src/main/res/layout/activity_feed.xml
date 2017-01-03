@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context="emp.fri.si.instarun.Feed">
+        tools:context="emp.fri.si.instarun.FeedActivity">
 
     <android.support.design.widget.AppBarLayout
             android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_feed"/>
+    <include layout="@layout/content_feed" android:layout_width="match_parent" android:layout_height="match_parent"/>
 
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"

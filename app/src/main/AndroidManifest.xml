@@ -2,8 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="emp.fri.si.instarun">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <uses-feature android:name="android.hardware.location"/>
+    <uses-feature android:name="android.hardware.sensor.stepcounter"/>
+    <uses-feature android:name="android.hardware.sensor.stepdetector"/>
 
     <application
         android:allowBackup="true"
@@ -12,16 +16,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Feed"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+                android:name=".FeedActivity"
+                android:label="@string/app_name"
+                android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Record"></activity>
+
+        <activity
+                android:name=".RecordActivity" />
+
+        <service
+                android:name=".TrackRecorderService"
+                android:enabled="true"
+                android:exported="true">
+        </service>
+
+
     </application>
 
 </manifest>
