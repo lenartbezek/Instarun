@@ -1,5 +1,8 @@
 package emp.fri.si.instarun;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +14,10 @@ import java.util.List;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder> {
     private List<Run> dataset;
+    private static Context context;
 
-    public static class RunViewHolder extends RecyclerView.ViewHolder {
+    public static class RunViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
 
         protected TextView vTitle;
         protected TextView vOwner;
@@ -21,10 +26,24 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
 
         public RunViewHolder(View v) {
             super(v);
+            context = itemView.getContext();
+            v.setOnClickListener(this);
             vTitle =  (TextView) v.findViewById(R.id.title);
             vOwner = (TextView)  v.findViewById(R.id.owner);
             vSteps = (TextView)  v.findViewById(R.id.steps);
             vLength = (TextView) v.findViewById(R.id.length);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Bundle bundle = new Bundle();
+            String runID = vTitle.getText().toString();
+            String adapterPosition = Integer.toString(getAdapterPosition());
+            Intent intent = new Intent(v.getContext(), ViewActivity.class);
+            bundle.putString("runID", runID);
+            bundle.putString("adapterPosition", adapterPosition);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
         }
     }
 
