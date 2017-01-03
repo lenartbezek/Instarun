@@ -91,7 +91,6 @@ public class RecordActivity extends AppCompatActivity {
                     // Permission declined
                     finish();
                 }
-                return;
             }
         }
     }
@@ -103,7 +102,7 @@ public class RecordActivity extends AppCompatActivity {
 
     private void stopRecording(){
         TrackRecorder.pause();
-        statusLabel.setText("PAUSED");
+        statusLabel.setText("STOPPED");
     }
 
     private void updateData(){

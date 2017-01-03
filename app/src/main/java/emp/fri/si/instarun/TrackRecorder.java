@@ -27,7 +27,6 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
     private static LocationManager locationManager;
     private static SensorManager   sensorManager;
 
-    private static Sensor stepCounterSensor;
     private static Sensor stepDetectorSensor;
 
     private TrackRecorder(){
@@ -38,7 +37,7 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
         public void onUpdate();
     }
 
-    private void onUpdate(){
+    private static void onUpdate(){
         for (UpdateListener listener : listeners) {
             listener.onUpdate();
         }
@@ -93,10 +92,9 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
             value = (int) values[0];
         }
 
-        if (sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-            steps += value;
-        } else if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
-            steps += value;
+        if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
+            steps++;
+            onUpdate();
         }
     }
 
@@ -138,9 +136,7 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
      */
     public static void ready(){
         // Register track recorder as sensor listener
-        stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        sensorManager.registerListener(singleton, stepCounterSensor, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(singleton, stepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         // Register track recorder as location listener
@@ -157,6 +153,7 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
     public static void start(){
         singleton.track.clear();
         singleton.steps = 0;
+        onUpdate();
 
         resume();
     }
@@ -181,8 +178,7 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
      */
     public static void stop(){
         if (singleton.ready){
-            sensorManager.unregisterListener(singleton, stepCounterSensor);
-            sensorManager.unregisterListener(singleton, stepDetectorSensor);
+            sensorManager.unregisterListener(singleton);
             locationManager.removeUpdates(singleton);
             singleton.ready = false;
         }
