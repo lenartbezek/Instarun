@@ -1,6 +1,7 @@
 package emp.fri.si.instarun;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +16,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.LatLng;
@@ -119,6 +122,8 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private void onPermissionDeclined() {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
     }
 
@@ -180,6 +185,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         statusLabel.setText("STOPPED");
 
         timeUpdateHandler.removeCallbacks(updateCurrentTime);
+        buildAlertNameRunDialog();
     }
 
     private void startService() {
@@ -191,18 +197,22 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private void buildAlertNameRunDialog(){
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final TextView input = new TextView (this);
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setTitle("Save run");
-        builder.setMessage("Give a name to your run")
+        builder.setMessage("Give a name to your run:")
                 .setView(input)
                 .setCancelable(false)
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         Run run = TrackRecorder.getRun();
-                        run.title = (String) input.getText();
+                        run.title = input.getText().toString();
                         run.save();
 
-                        //startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("runId", run.id);
+                        setResult(Activity.RESULT_OK, returnIntent);
+                        finish();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -228,6 +238,8 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         dialog.cancel();
+                        Intent returnIntent = new Intent();
+                        setResult(Activity.RESULT_CANCELED, returnIntent);
                         finish();
                     }
                 });

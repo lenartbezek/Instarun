@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import emp.fri.si.instarun.model.Person;
 import emp.fri.si.instarun.model.Run;
 
 import java.util.List;
@@ -69,7 +70,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
     public void onBindViewHolder(RunViewHolder holder, int i) {
         Run r = dataset.get(i);
         holder.vTitle.setText(r.title);
-        holder.vOwner.setText(r.owner.name);
+        if (r.ownerId != null) {
+            holder.vOwner.setText((CharSequence) Person.get(r.ownerId));
+        } else {
+            holder.vOwner.setText("");
+        }
 
         String lengthText;
         if (r.length > 1000){

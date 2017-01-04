@@ -1,5 +1,6 @@
 package emp.fri.si.instarun;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +21,10 @@ public class FeedActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private RecyclerView.LayoutManager layoutManager;
     private FeedAdapter adapter;
+
+    private List<Run> dataset = new LinkedList<>();
+
+    public static final int REQUEST_RECORD = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,29 +49,14 @@ public class FeedActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // Specify an adapter (see also next example)
-        adapter = new FeedAdapter(new LinkedList<Run>() {
-            @Override
-            public Run get(int i) {
-                Person p = new Person();
-                p.name = "Asfalt Makedamovič";
-                Run r = new Run();
-                r.owner = p;
-                r.length = 1234;
-                r.steps = 6666;
-                r.title = "Jutranji tek";
-                return r;
-            }
-            @Override
-            public int size(){
-                return 20;
-            }
-        });
+        dataset = Run.getAll();
+        adapter = new FeedAdapter(dataset);
         recyclerView.setAdapter(adapter);
     }
 
     private void startRecordActivity(){
         Intent intent = new Intent(this, RecordActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_RECORD);
     }
 
     @Override
@@ -89,5 +79,22 @@ public class FeedActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_RECORD) {
+            if(resultCode == Activity.RESULT_OK){
+                int runId = data.getIntExtra("runId", -1);
+                if (runId > 0){
+                    dataset.add(Run.get(runId));
+                    adapter.notifyDataSetChanged();
+                }
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
     }
 }

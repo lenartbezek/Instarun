@@ -171,6 +171,7 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
      * Stops recording with intent of resuming it.
      */
     public static void pause(){
+        singleton.endTime = new Date();
         singleton.tracking = false;
     }
 

@@ -93,7 +93,7 @@ public class RunDbHelper extends SQLiteOpenHelper {
                 "steps",
                 "trackFile",
                 "startIsoTime",
-                "endIsoTime)"
+                "endIsoTime"
         };
 
         String selection = "_id = ?";
@@ -144,7 +144,7 @@ public class RunDbHelper extends SQLiteOpenHelper {
                 "steps",
                 "trackFile",
                 "startIsoTime",
-                "endIsoTime)"
+                "endIsoTime"
         };
 
         Cursor cursor = db.query(
