@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -159,6 +160,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private void startRecording() {
         TrackRecorder.start();
+        recordButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flag, getTheme()));
         statusLabel.setText("RECORDING");
 
         timeTextView.setText("00:00");
@@ -167,6 +169,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private void stopRecording() {
         TrackRecorder.pause();
+        recordButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_run, getTheme()));
         statusLabel.setText("STOPPED");
 
         timeUpdateHandler.removeCallbacks(updateCurrentTime);
