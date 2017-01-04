@@ -11,11 +11,10 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <com.google.android.gms.maps.MapView
+        <fragment
                 android:layout_width="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true" android:id="@+id/mapView" android:layout_height="wrap_content"
-                android:layout_weight="0.6"/>
+                android:layout_height="wrap_content" android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:id="@+id/mapFragment" android:layout_weight="1"/>
         <TextView
                 android:text="READY"
                 android:layout_width="match_parent"
@@ -54,17 +53,9 @@
                     android:layout_height="wrap_content" android:layout_weight="0.25"
                     android:id="@+id/lengthTextView" android:textStyle="bold"/>
         </LinearLayout>
-        <TextView
-                android:text="00:00"
-                android:layout_width="match_parent"
-                android:textStyle="bold"
-                android:textAlignment="center" android:textSize="48sp"
-                android:layout_marginBottom="18dp"
-                android:layout_centerHorizontal="true" android:id="@+id/timeTextView"
-                android:layout_below="@+id/detailHolderLayout" android:layout_height="wrap_content"/>
         <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_weight="0.06" android:layout_height="wrap_content">
+                android:layout_height="84dp" android:paddingBottom="16dp">
 
             <android.support.design.widget.FloatingActionButton
                     android:clickable="true"
@@ -74,8 +65,17 @@
                     android:id="@+id/floatingActionButton"
                     android:scaleType="center" app:fabSize="normal"
                     app:backgroundTint="?attr/colorPrimary"
-                    android:layout_weight="0.12" android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"/>
+                    android:layout_weight="0.12"
+                    android:layout_marginEnd="44dp" app:elevation="0dp"
+                    android:layout_alignParentBottom="true" android:layout_alignParentEnd="true"/>
+            <TextView
+                    android:text="00:00"
+                    android:layout_width="match_parent"
+                    android:textStyle="bold"
+                    android:textAlignment="center" android:textSize="48sp"
+                    android:id="@+id/timeTextView"
+                    android:layout_height="wrap_content" android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"/>
         </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

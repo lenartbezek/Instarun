@@ -35,9 +35,8 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
     }
 
     public interface UpdateListener{
-        public void onStepUpdate();
-        public void onTrackUpdate();
-        public void onLocationUpdate();
+        void onStepUpdate();
+        void onTrackUpdate();
     }
 
     private static void handleStepUpdate(){
@@ -48,11 +47,6 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
     private static void handleTrackUpdate(){
         for (UpdateListener listener : listeners)
             listener.onTrackUpdate();
-    }
-
-    private static void handleLocationUpdate(){
-        for (UpdateListener listener : listeners)
-            listener.onLocationUpdate();
     }
 
     private static HashSet<UpdateListener> listeners = new HashSet<>();
@@ -88,8 +82,6 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
             track.add(loc);
             handleTrackUpdate();
         }
-
-        handleLocationUpdate();
     }
 
 
@@ -155,7 +147,7 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
 
     /**
      * Starts recording or resets current progress.
-     * Track recorder only logs steps and location when recording.
+     * Track recorder logs steps and location only when recording.
      */
     public static void start(){
         singleton.track.clear();
