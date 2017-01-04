@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import emp.fri.si.instarun.model.Run;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -21,29 +22,40 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
     private LinkedList<Location> track;
     private int                  steps;
     private Location             currentLocation;
+    private Date                 startTime;
+    private Date                 endTime;
 
     private static TrackRecorder singleton;
 
     private static LocationManager locationManager;
     private static SensorManager   sensorManager;
 
-    private static Sensor stepDetectorSensor;
-
     private TrackRecorder(){
-        track = new LinkedList<Location>();
+        track = new LinkedList<>();
     }
 
     public interface UpdateListener{
-        public void onUpdate();
+        public void onStepUpdate();
+        public void onTrackUpdate();
+        public void onLocationUpdate();
     }
 
-    private static void onUpdate(){
-        for (UpdateListener listener : listeners) {
-            listener.onUpdate();
-        }
+    private static void handleStepUpdate(){
+        for (UpdateListener listener : listeners)
+            listener.onStepUpdate();
     }
 
-    private static HashSet<UpdateListener> listeners = new HashSet<UpdateListener>();
+    private static void handleTrackUpdate(){
+        for (UpdateListener listener : listeners)
+            listener.onTrackUpdate();
+    }
+
+    private static void handleLocationUpdate(){
+        for (UpdateListener listener : listeners)
+            listener.onLocationUpdate();
+    }
+
+    private static HashSet<UpdateListener> listeners = new HashSet<>();
 
     /**
      * Adds UpdateListener to be called when getting a location or step update.
@@ -74,9 +86,10 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
 
         if (tracking){
             track.add(loc);
+            handleTrackUpdate();
         }
 
-        onUpdate();
+        handleLocationUpdate();
     }
 
 
@@ -85,16 +98,10 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
         if (!tracking) return;
 
         Sensor sensor = event.sensor;
-        float[] values = event.values;
-        int value = -1;
-
-        if (values.length > 0) {
-            value = (int) values[0];
-        }
 
         if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
             steps++;
-            onUpdate();
+            handleStepUpdate();
         }
     }
 
@@ -136,7 +143,7 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
      */
     public static void ready(){
         // Register track recorder as sensor listener
-        stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        Sensor stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         sensorManager.registerListener(singleton, stepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         // Register track recorder as location listener
@@ -153,7 +160,9 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
     public static void start(){
         singleton.track.clear();
         singleton.steps = 0;
-        onUpdate();
+        singleton.startTime = new Date();
+        handleStepUpdate();
+        handleTrackUpdate();
 
         resume();
     }
@@ -180,9 +189,11 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
         if (singleton.ready){
             sensorManager.unregisterListener(singleton);
             locationManager.removeUpdates(singleton);
+
             singleton.ready = false;
+            singleton.tracking = false;
+            singleton.endTime = new Date();
         }
-        pause();
     }
 
     public static LinkedList<Location> getTrack(){
@@ -203,6 +214,14 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
         return length;
     }
 
+    public static Date getStartTime(){
+        return singleton.startTime;
+    }
+
+    public static Date getEndTime(){
+        return singleton.endTime;
+    }
+
     public static int getSteps(){
          return singleton != null ? singleton.steps : 0;
     }
@@ -217,6 +236,8 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
         run.steps = getSteps();
         run.length = getLength();
         run.track = getTrack();
+        run.startTime = getStartTime();
+        run.endTime = getEndTime();
         return run;
     }
 

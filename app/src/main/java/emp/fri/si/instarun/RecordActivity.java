@@ -46,8 +46,19 @@ public class RecordActivity extends AppCompatActivity {
         // Create listener to track changes and updates user interface
         updateListener = new TrackRecorder.UpdateListener() {
             @Override
-            public void onUpdate() {
-                updateData();
+            public void onStepUpdate() {
+                stepsTextView.setText(String.valueOf(TrackRecorder.getSteps()));
+            }
+
+            @Override
+            public void onTrackUpdate() {
+                lengthTextView.setText(String.valueOf(TrackRecorder.getLength()));
+                // TODO: Draw track on map
+            }
+
+            @Override
+            public void onLocationUpdate() {
+                // TODO: Show location on map
             }
         };
     }
@@ -103,11 +114,6 @@ public class RecordActivity extends AppCompatActivity {
     private void stopRecording(){
         TrackRecorder.pause();
         statusLabel.setText("STOPPED");
-    }
-
-    private void updateData(){
-        stepsTextView.setText(String.valueOf(TrackRecorder.getSteps()));
-        lengthTextView.setText(String.valueOf(TrackRecorder.getLength()));
     }
 
     private void startService(){
