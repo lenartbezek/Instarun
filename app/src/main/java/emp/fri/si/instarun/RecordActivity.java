@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import emp.fri.si.instarun.model.Run;
 
 import java.util.Date;
 
@@ -158,6 +159,12 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         }
     }
 
+    private void resetRecording(){
+        TrackRecorder.pause();
+        recordButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flag, getTheme()));
+        statusLabel.setText("READY");
+    }
+
     private void startRecording() {
         TrackRecorder.start();
         recordButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flag, getTheme()));
@@ -180,6 +187,32 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         startService(serviceIntent);
 
         TrackRecorder.addUpdateListener(updateListener);
+    }
+
+    private void buildAlertNameRunDialog(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final TextView input = new TextView (this);
+        builder.setTitle("Save run");
+        builder.setMessage("Give a name to your run")
+                .setView(input)
+                .setCancelable(false)
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        Run run = TrackRecorder.getRun();
+                        run.title = (String) input.getText();
+                        run.save();
+
+                        //startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                        resetRecording();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void buildAlertMessageNoGps() {
