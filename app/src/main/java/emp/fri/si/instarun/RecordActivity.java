@@ -52,7 +52,14 @@ public class RecordActivity extends AppCompatActivity {
 
             @Override
             public void onTrackUpdate() {
-                lengthTextView.setText(String.valueOf(TrackRecorder.getLength()));
+                float length = TrackRecorder.getLength();
+                String text;
+                if (length > 1000){
+                    text = String.format("%.1f km", length/1000);
+                } else {
+                    text = String.format("%.0f m", length);
+                }
+                lengthTextView.setText(text);
                 // TODO: Draw track on map
             }
 
