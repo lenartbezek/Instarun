@@ -3,6 +3,7 @@ package emp.fri.si.instarun;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -10,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import java.util.Date;
 
 public class RecordActivity extends AppCompatActivity {
 
@@ -19,6 +22,9 @@ public class RecordActivity extends AppCompatActivity {
     private TextView stepsTextView;
     private TextView lengthTextView;
     private TextView statusLabel;
+    private TextView timeTextView;
+    private Handler timeUpdateHandler;
+    private Runnable updateCurrentTime;
 
     private TrackRecorder.UpdateListener updateListener;
 
@@ -29,6 +35,7 @@ public class RecordActivity extends AppCompatActivity {
 
         stepsTextView = (TextView) findViewById(R.id.stepsTextView);
         lengthTextView = (TextView) findViewById(R.id.lengthTextView);
+        timeTextView = (TextView) findViewById(R.id.timeTextView);
         statusLabel = (TextView) findViewById(R.id.statusLabel);
 
         // Toggle recording on click
@@ -68,6 +75,22 @@ public class RecordActivity extends AppCompatActivity {
                 // TODO: Show location on map
             }
         };
+
+        // Update timer when recording
+        timeUpdateHandler = new Handler();
+
+        updateCurrentTime = new Runnable(){
+            @Override
+            public void run()
+            {
+                long time = new Date().getTime() - TrackRecorder.getStartTime().getTime();
+                int seconds = (int) (time / 1000 % 60);
+                int minutes = (int) (time / 60000 % 60);
+                timeTextView.setText(String.format("%02d:%02d", minutes, seconds));
+                timeUpdateHandler.postDelayed(this,1000);
+            }
+        };
+
     }
 
     @Override
@@ -116,11 +139,16 @@ public class RecordActivity extends AppCompatActivity {
     private void startRecording(){
         TrackRecorder.start();
         statusLabel.setText("RECORDING");
+
+        timeTextView.setText("00:00");
+        timeUpdateHandler.postDelayed(updateCurrentTime,1000);
     }
 
     private void stopRecording(){
         TrackRecorder.pause();
         statusLabel.setText("STOPPED");
+
+        timeUpdateHandler.removeCallbacks(updateCurrentTime);
     }
 
     private void startService(){

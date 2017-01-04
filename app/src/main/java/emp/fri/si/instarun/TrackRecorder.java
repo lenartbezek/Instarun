@@ -215,11 +215,11 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
     }
 
     public static Date getStartTime(){
-        return singleton.startTime;
+        return singleton != null ? singleton.startTime : null;
     }
 
     public static Date getEndTime(){
-        return singleton.endTime;
+        return singleton != null ? singleton.endTime : null;
     }
 
     public static int getSteps(){

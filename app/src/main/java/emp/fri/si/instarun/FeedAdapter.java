@@ -70,8 +70,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
         Run r = dataset.get(i);
         holder.vTitle.setText(r.title);
         holder.vOwner.setText(r.owner.name);
-        holder.vLength.setText(r.length +"");
-        holder.vSteps.setText(r.steps +"");
+
+        String lengthText;
+        if (r.length > 1000){
+            lengthText = String.format("%.1f km", r.length/1000);
+        } else {
+            lengthText = String.format("%.0f m", r.length);
+        }
+        holder.vLength.setText(lengthText);
+        holder.vSteps.setText(String.valueOf(r.steps));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
