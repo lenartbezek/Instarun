@@ -88,8 +88,14 @@ public class FeedActivity extends AppCompatActivity {
             if(resultCode == Activity.RESULT_OK){
                 long runId = data.getLongExtra("runId", -1);
                 if (runId > 0){
+                    // Update dataset
                     dataset.add(Run.get(runId));
                     adapter.notifyDataSetChanged();
+
+                    // Forward to ViewActivity
+                    Intent intent = new Intent(this, ViewActivity.class);
+                    intent.putExtra("runId", runId);
+                    startActivity(intent);
                 }
             }
             if (resultCode == Activity.RESULT_CANCELED) {

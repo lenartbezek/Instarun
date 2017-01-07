@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import emp.fri.si.instarun.model.Run;
 
 public class ViewActivity extends AppCompatActivity {
 
-    String myString = "nothing happened";
+    private Run run;
     private TextView tv;
 
     @Override
@@ -20,11 +21,11 @@ public class ViewActivity extends AppCompatActivity {
         if(intent != null) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                myString = "Izbral si vrstico: " + bundle.getString("adapterPosition") +
-                            " in aktivnost: " + bundle.getString("runID");
+                long id = bundle.getLong("runId");
+                run = Run.get(id);
+                tv.setText(run.title);
             }
         }
-        tv.setText(myString);
     }
 
 }

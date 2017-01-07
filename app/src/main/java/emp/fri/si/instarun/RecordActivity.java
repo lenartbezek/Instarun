@@ -111,6 +111,14 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     @Override
+    protected void onResume(){
+        super.onResume();
+        if ( locationManager != null && !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            buildAlertMessageNoGps();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         TrackRecorder.removeUpdateListener(updateListener);
@@ -232,7 +240,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 100, this);
 
-            if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            if (!locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER )) {
                 buildAlertMessageNoGps();
             }
         } catch (SecurityException e){

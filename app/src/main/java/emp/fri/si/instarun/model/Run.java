@@ -58,21 +58,21 @@ public class Run {
         RunDbHelper db = new RunDbHelper(InstarunApp.getContext());
 
         db.save(this);
-        GpxHelper.writeToFile("gpx/"+id+".gpx", title, track);
+        GpxHelper.writeToFile("track-"+id+".gpx", title, track);
     }
 
     public void delete(){
         RunDbHelper db = new RunDbHelper(InstarunApp.getContext());
 
         if (db.delete(this))
-            InstarunApp.getContext().deleteFile("gpx/"+id+".gpx");
+            InstarunApp.getContext().deleteFile("track-"+id+".gpx");
     }
 
     public static Run get(long id){
         RunDbHelper db = new RunDbHelper(InstarunApp.getContext());
 
         Run run = db.read(id);
-        run.track = GpxHelper.readFromFile("gpx/"+id+".gpx");
+        run.track = GpxHelper.readFromFile("track"+id+".gpx");
         return run;
     }
 
@@ -81,7 +81,7 @@ public class Run {
 
         List<Run> runs = db.read();
         for (Run run: runs)
-            run.track = GpxHelper.readFromFile("gpx/"+run.id+".gpx");
+            run.track = GpxHelper.readFromFile("track-"+run.id+".gpx");
         return runs;
     }
 }

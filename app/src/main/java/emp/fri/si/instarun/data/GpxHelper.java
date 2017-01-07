@@ -10,6 +10,7 @@ import io.ticofab.androidgpxparser.parser.domain.Gpx;
 import io.ticofab.androidgpxparser.parser.domain.Track;
 import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
 import io.ticofab.androidgpxparser.parser.domain.TrackSegment;
+import org.joda.time.DateTime;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.*;
@@ -35,16 +36,16 @@ public class GpxHelper {
 
         String segments = "";
         for (TrackPoint p : track.getTracks().get(0).getTrackSegments().get(0).getTrackPoints()) {
-            segments += "<trkpt lat=\"" + p.getLatitude() + "\" lon=\"" + p.getLongitude() + "\"><time>" + IsoDateHelper.dateToIsoString(p.getTime().toDate()) + "</time></trkpt>\n";
+            DateTime time = p.getTime();
+            if (time == null) continue;
+            String date = IsoDateHelper.dateToIsoString(time.toDate());
+            segments += "<trkpt lat=\"" + p.getLatitude() + "\" lon=\"" + p.getLongitude() + "\"><time>" + date + "</time></trkpt>\n";
         }
 
         String footer = "</trkseg></trk></gpx>";
 
         try {
-            File file = new File(path);
-            file.mkdirs();
-            if (!file.exists()) file.createNewFile();
-            FileOutputStream fos = new FileOutputStream(file, false);
+            FileOutputStream fos = InstarunApp.getInstance().openFileOutput(path, Context.MODE_PRIVATE);
             fos.write(header.getBytes());
             fos.write(name.getBytes());
             fos.write(segments.getBytes());

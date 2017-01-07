@@ -20,6 +20,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
     public static class RunViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
+        protected long runId;
         protected TextView vTitle;
         protected TextView vOwner;
         protected TextView vSteps;
@@ -38,11 +39,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
         @Override
         public void onClick(View v) {
             Bundle bundle = new Bundle();
-            String runID = vTitle.getText().toString();
-            String adapterPosition = Integer.toString(getAdapterPosition());
             Intent intent = new Intent(v.getContext(), ViewActivity.class);
-            bundle.putString("runID", runID);
-            bundle.putString("adapterPosition", adapterPosition);
+            bundle.putLong("runId", runId);
             intent.putExtras(bundle);
             context.startActivity(intent);
         }
@@ -55,8 +53,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
 
     // Create new views (invoked by the layout manager)
     @Override
-    public RunViewHolder onCreateViewHolder(ViewGroup parent,
-                                            int viewType) {
+    public RunViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_layout, parent, false);
@@ -69,6 +66,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
     @Override
     public void onBindViewHolder(RunViewHolder holder, int i) {
         Run r = dataset.get(i);
+        holder.runId = r.id;
         holder.vTitle.setText(r.title);
         if (r.ownerId != null) {
             holder.vOwner.setText((CharSequence) Person.get(r.ownerId));
