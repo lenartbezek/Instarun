@@ -68,7 +68,7 @@ public class Run {
             InstarunApp.getContext().deleteFile("gpx/"+id+".gpx");
     }
 
-    public static Run get(int id){
+    public static Run get(long id){
         RunDbHelper db = new RunDbHelper(InstarunApp.getContext());
 
         Run run = db.read(id);

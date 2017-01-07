@@ -86,7 +86,7 @@ public class FeedActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_RECORD) {
             if(resultCode == Activity.RESULT_OK){
-                int runId = data.getIntExtra("runId", -1);
+                long runId = data.getLongExtra("runId", -1);
                 if (runId > 0){
                     dataset.add(Run.get(runId));
                     adapter.notifyDataSetChanged();

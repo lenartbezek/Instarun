@@ -131,7 +131,7 @@ public class RunDbHelper extends SQLiteOpenHelper {
      * @param id
      * @return
      */
-    public Run read(int id){
+    public Run read(long id){
         SQLiteDatabase db = getReadableDatabase();
 
         String[] projection = {

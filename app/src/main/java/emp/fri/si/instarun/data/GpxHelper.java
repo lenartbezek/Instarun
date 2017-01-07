@@ -2,7 +2,9 @@ package emp.fri.si.instarun.data;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 import emp.fri.si.instarun.InstarunApp;
+import emp.fri.si.instarun.util.IsoDateHelper;
 import io.ticofab.androidgpxparser.parser.GPXParser;
 import io.ticofab.androidgpxparser.parser.domain.Gpx;
 import io.ticofab.androidgpxparser.parser.domain.Track;
@@ -32,23 +34,26 @@ public class GpxHelper {
         String nameHeader = "<name>" + name + "</name><trkseg>\n";
 
         String segments = "";
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         for (TrackPoint p : track.getTracks().get(0).getTrackSegments().get(0).getTrackPoints()) {
-            segments += "<trkpt lat=\"" + p.getLatitude() + "\" lon=\"" + p.getLongitude() + "\"><time>" + df.format(p.getTime()) + "</time></trkpt>\n";
+            segments += "<trkpt lat=\"" + p.getLatitude() + "\" lon=\"" + p.getLongitude() + "\"><time>" + IsoDateHelper.dateToIsoString(p.getTime().toDate()) + "</time></trkpt>\n";
         }
 
         String footer = "</trkseg></trk></gpx>";
 
         try {
-            FileOutputStream fos = InstarunApp.getInstance().openFileOutput(path, Context.MODE_PRIVATE);
+            File file = new File(path);
+            file.mkdirs();
+            if (!file.exists()) file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file, false);
             fos.write(header.getBytes());
-            fos.write(nameHeader.getBytes());
+            fos.write(name.getBytes());
             fos.write(segments.getBytes());
             fos.write(footer.getBytes());
             fos.flush();
             fos.close();
             return true;
         } catch (IOException e) {
+            Log.e("Gpx", Log.getStackTraceString(e));
             return false;
         }
     }
