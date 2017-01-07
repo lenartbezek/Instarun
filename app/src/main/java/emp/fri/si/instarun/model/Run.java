@@ -16,7 +16,7 @@ public class Run {
     public Run(){
         Calendar c = Calendar.getInstance();
         int hours = c.get(Calendar.HOUR_OF_DAY);
-        if (hours >= 21 && hours < 5){
+        if (hours >= 21 || hours < 5){
             title = "Night run";
         } else if (hours <= 9){
             title = "Morning run";

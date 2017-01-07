@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 import emp.fri.si.instarun.model.Run;
+import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
 
 public class ViewActivity extends AppCompatActivity {
 

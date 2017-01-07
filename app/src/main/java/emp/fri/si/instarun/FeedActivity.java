@@ -48,10 +48,19 @@ public class FeedActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // Specify an adapter (see also next example)
+        // Specify an adapter
         dataset = Run.getAll();
         adapter = new FeedAdapter(dataset);
         recyclerView.setAdapter(adapter);
+
+        // Forward to ViewActivity on intent with runId (from just finished RecordActivity)
+        Intent receivedIntent = getIntent();
+        if (receivedIntent.hasExtra("runId")){
+            Intent intent = new Intent(this, ViewActivity.class);
+            long runId = receivedIntent.getLongExtra("runId", -1);
+            intent.putExtra("runId", runId);
+            startActivity(intent);
+        }
     }
 
     private void startRecordActivity(){

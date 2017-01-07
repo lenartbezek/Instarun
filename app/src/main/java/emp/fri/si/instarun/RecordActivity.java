@@ -3,6 +3,7 @@ package emp.fri.si.instarun;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -42,7 +43,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private Handler timeUpdateHandler;
     private Runnable updateCurrentTime;
-    private TrackRecorder.UpdateListener updateListener;
+    private TrackRecorderService.UpdateListener updateListener;
     private LocationManager locationManager;
 
     @Override
@@ -60,7 +61,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (TrackRecorder.isTracking())
+                if (TrackRecorderService.isTracking())
                     stopRecording();
                 else
                     startRecording();
@@ -68,15 +69,15 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         });
 
         // Create listener to track changes and updates user interface
-        updateListener = new TrackRecorder.UpdateListener() {
+        updateListener = new TrackRecorderService.UpdateListener() {
             @Override
             public void onStepUpdate() {
-                stepsTextView.setText(String.valueOf(TrackRecorder.getSteps()));
+                stepsTextView.setText(String.valueOf(TrackRecorderService.getSteps()));
             }
 
             @Override
             public void onTrackUpdate() {
-                float length = TrackRecorder.getLength();
+                float length = TrackRecorderService.getLength();
                 String text;
                 if (length > 1000) {
                     text = String.format("%.1f km", length / 1000);
@@ -88,19 +89,33 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         };
 
+        // Call listener if already tracking
+        if (TrackRecorderService.isTracking()){
+            updateListener.onStepUpdate();
+            updateListener.onTrackUpdate();
+        }
+
         // Update timer when recording
         timeUpdateHandler = new Handler();
 
         updateCurrentTime = new Runnable() {
             @Override
             public void run() {
-                long time = new Date().getTime() - TrackRecorder.getStartTime().getTime();
+                long time = new Date().getTime() - TrackRecorderService.getStartTime().getTime();
                 int seconds = (int) (time / 1000 % 60);
                 int minutes = (int) (time / 60000 % 60);
                 timeTextView.setText(String.format("%02d:%02d", minutes, seconds));
                 timeUpdateHandler.postDelayed(this, 1000);
             }
         };
+
+        // Is currently recording
+        if (TrackRecorderService.isTracking()){
+            recordButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flag, getTheme()));
+            statusLabel.setText("RECORDING");
+
+            timeUpdateHandler.postDelayed(updateCurrentTime, 0);
+        }
 
         // Initialize Google Map
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -121,7 +136,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        TrackRecorder.removeUpdateListener(updateListener);
+        TrackRecorderService.removeUpdateListener(updateListener);
     }
 
     private void onPermissionGranted() {
@@ -173,13 +188,13 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private void resetRecording(){
-        TrackRecorder.pause();
+        TrackRecorderService.pause();
         recordButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flag, getTheme()));
         statusLabel.setText("READY");
     }
 
     private void startRecording() {
-        TrackRecorder.start();
+        TrackRecorderService.start();
         recordButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flag, getTheme()));
         statusLabel.setText("RECORDING");
 
@@ -188,26 +203,32 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private void stopRecording() {
-        TrackRecorder.pause();
+        TrackRecorderService.stop();
         recordButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_run, getTheme()));
         statusLabel.setText("STOPPED");
 
         timeUpdateHandler.removeCallbacks(updateCurrentTime);
 
-        Run run = TrackRecorder.getRun();
+        Run run = TrackRecorderService.getRun();
         run.save();
 
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("runId", run.id);
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
+        if (getCallingActivity() == new ComponentName(this, FeedActivity.class)){
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("runId", run.id);
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+        } else {
+            Intent intent = new Intent(this, FeedActivity.class);
+            intent.putExtra("runId", run.id);
+            startActivity(intent);
+        }
     }
 
     private void startService() {
         Intent serviceIntent = new Intent(this, TrackRecorderService.class);
         startService(serviceIntent);
 
-        TrackRecorder.addUpdateListener(updateListener);
+        TrackRecorderService.addUpdateListener(updateListener);
     }
 
     private void buildAlertMessageNoGps() {
