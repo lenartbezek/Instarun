@@ -1,4 +1,4 @@
-package emp.fri.si.instarun.database;
+package emp.fri.si.instarun.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -49,8 +49,20 @@ public class RunDbHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Saves new Run or updates an existing one.
+     * @param run
+     */
+    public void save(Run run){
+        if (run.isSaved)
+            update(run);
+        else
+            insert(run);
+
+    }
+
+    /**
      * Saves Run to local SQLite database. Returns the same run with it's id field set.
-     * @param run model.Run to be saved.
+     * @param run model. Run to be saved.
      * @return
      */
     public Run insert(Run run){
@@ -70,17 +82,55 @@ public class RunDbHelper extends SQLiteOpenHelper {
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert("Run", null, values);
         run.id = newRowId;
+        run.isSaved = true;
         return run;
     }
 
-    public int delete(Run run){
+    /**
+     * Updates existing Run. Will not work if the Run isn't saved locally yet.
+     * Check Run.isSaved before calling.
+     * @param run Run to be updated.
+     * @return
+     */
+    public boolean update(Run run) {
         SQLiteDatabase db = getWritableDatabase();
 
-        String selection = "ID = ?";
+        ContentValues values = new ContentValues();
+        values.put("globalId", run.globalId);
+        values.put("ownerId", run.ownerId);
+        values.put("title", run.title);
+        values.put("length", run.length);
+        values.put("steps", run.steps);
+        values.put("trackFile", run.trackFile);
+        values.put("startIsoTime", IsoDateHelper.dateToIsoString(run.startTime));
+        values.put("endIsoTime", IsoDateHelper.dateToIsoString(run.endTime));
+
+        String selection = "_id = ?";
         String[] selectionArgs = { String.valueOf(run.id) };
-        return db.delete("Run", selection, selectionArgs);
+
+        return db.update("Run", values, selection, selectionArgs) > 0;
     }
 
+    /**
+     * Deletes existing Run. Returns true if successful.
+     * @param run Run to be deleted.
+     * @return
+     */
+    public boolean delete(Run run){
+        SQLiteDatabase db = getWritableDatabase();
+
+        String selection = "_id = ?";
+        String[] selectionArgs = { String.valueOf(run.id) };
+        boolean success = db.delete("Run", selection, selectionArgs) > 0;
+        if (success) run.isSaved = false;
+        return success;
+    }
+
+    /**
+     * Returns a locally stored Run by id.
+     * @param id
+     * @return
+     */
     public Run read(int id){
         SQLiteDatabase db = getReadableDatabase();
 
@@ -122,6 +172,7 @@ public class RunDbHelper extends SQLiteOpenHelper {
                 run.trackFile = cursor.getString(cursor.getColumnIndex("trackFile"));
                 run.startTime = IsoDateHelper.isoStringToDate(cursor.getString(cursor.getColumnIndex("startIsoTime")));
                 run.endTime = IsoDateHelper.isoStringToDate(cursor.getString(cursor.getColumnIndex("endIsoTime")));
+                run.isSaved = true;
             } catch (ParseException e) {
                 return null;
             } finally{
@@ -132,6 +183,10 @@ public class RunDbHelper extends SQLiteOpenHelper {
         return run;
     }
 
+    /**
+     * Returns all locally stored Runs.
+     * @return
+     */
     public List<Run> read(){
         SQLiteDatabase db = getReadableDatabase();
 
@@ -171,6 +226,7 @@ public class RunDbHelper extends SQLiteOpenHelper {
                 run.trackFile = cursor.getString(cursor.getColumnIndex("trackFile"));
                 run.startTime = IsoDateHelper.isoStringToDate(cursor.getString(cursor.getColumnIndex("startIsoTime")));
                 run.endTime = IsoDateHelper.isoStringToDate(cursor.getString(cursor.getColumnIndex("endIsoTime")));
+                run.isSaved = true;
                 list.add(run);
             } catch (ParseException e) {
                 continue;

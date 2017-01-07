@@ -9,11 +9,15 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import emp.fri.si.instarun.data.GpxHelper;
 import emp.fri.si.instarun.model.Run;
+import io.ticofab.androidgpxparser.parser.domain.Gpx;
+import io.ticofab.androidgpxparser.parser.domain.Track;
+import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
+import io.ticofab.androidgpxparser.parser.domain.TrackSegment;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.io.File;
+import java.util.*;
 
 public class TrackRecorder implements LocationListener, SensorEventListener {
 
@@ -189,8 +193,22 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
         }
     }
 
+    /**
+     * Returns a list of Locations. Used for realtime calculations while recording, not for storage.
+     * @return
+     */
     public static LinkedList<Location> getTrack(){
         return singleton != null ? singleton.track : new LinkedList<Location>();
+    }
+
+    /**
+     * Returns a Gpx track. Used for writing to a file.
+     * @return
+     */
+    public static Gpx getGpx(){
+        if (singleton == null) return null;
+
+        return GpxHelper.buildGpx(singleton.track);
     }
 
     public static Location getCurrentLocation(){
@@ -228,7 +246,7 @@ public class TrackRecorder implements LocationListener, SensorEventListener {
         Run run = new Run();
         run.steps = getSteps();
         run.length = getLength();
-        run.track = getTrack();
+        run.track = getGpx();
         run.startTime = getStartTime();
         run.endTime = getEndTime();
         return run;
