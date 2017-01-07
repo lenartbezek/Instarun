@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:background="@color/colorPrimary"
+        tools:context="emp.fri.si.instarun.SplashActivity" >
+
+    <TextView
+            android:text="Instarun"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:id="@+id/textView"
+            android:textIsSelectable="false"
+            android:textColor="@android:color/white"
+            android:textSize="64sp"/>
+</RelativeLayout>
