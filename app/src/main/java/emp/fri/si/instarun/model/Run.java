@@ -7,10 +7,27 @@ import emp.fri.si.instarun.data.GpxHelper;
 import emp.fri.si.instarun.data.RunDbHelper;
 import io.ticofab.androidgpxparser.parser.domain.Gpx;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class Run {
+
+    public Run(){
+        Calendar c = Calendar.getInstance();
+        int hours = c.get(Calendar.HOUR_OF_DAY);
+        if (hours >= 21 && hours < 5){
+            title = "Night run";
+        } else if (hours <= 9){
+            title = "Morning run";
+        } else if (hours <= 13) {
+            title = "Noon run";
+        } else if (hours <= 18) {
+            title = "Afternoon run";
+        } else {
+            title = "Evening run";
+        }
+    }
 
     /**
      * Local ID for storing in SQLite database.

@@ -185,7 +185,14 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         statusLabel.setText("STOPPED");
 
         timeUpdateHandler.removeCallbacks(updateCurrentTime);
-        buildAlertNameRunDialog();
+
+        Run run = TrackRecorder.getRun();
+        run.save();
+
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("runId", run.id);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 
     private void startService() {
@@ -193,36 +200,6 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         startService(serviceIntent);
 
         TrackRecorder.addUpdateListener(updateListener);
-    }
-
-    private void buildAlertNameRunDialog(){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setTitle("Save run");
-        builder.setMessage("Give a name to your run:")
-                .setView(input)
-                .setCancelable(false)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        Run run = TrackRecorder.getRun();
-                        run.title = input.getText().toString();
-                        run.save();
-
-                        Intent returnIntent = new Intent();
-                        returnIntent.putExtra("runId", run.id);
-                        setResult(Activity.RESULT_OK, returnIntent);
-                        finish();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        dialog.cancel();
-                        resetRecording();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
     }
 
     private void buildAlertMessageNoGps() {
