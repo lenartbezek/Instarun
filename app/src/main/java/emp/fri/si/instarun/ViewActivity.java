@@ -36,7 +36,7 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private final int PERMISSION_REQUEST_CODE = 1337;
     private Run run;
-    private TextView distance, steps, time, title, distanceLabel;
+    private TextView distance, steps, time, title;
     private SupportMapFragment supportMapFragment;
     private GoogleMap map;
     private LocationManager locationManager;
@@ -50,7 +50,6 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
         steps =  (TextView) findViewById(R.id.stepsTextView);
         time =  (TextView) findViewById(R.id.timeTextView);
         title =  (TextView) findViewById(R.id.titleLabel);
-        distanceLabel =  (TextView) findViewById(R.id.distanceLabel);
 
         Intent intent = getIntent();
         if(intent != null) {
@@ -92,9 +91,7 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
-        map.animateCamera(cameraUpdate);
+
     }
 
     @Override
