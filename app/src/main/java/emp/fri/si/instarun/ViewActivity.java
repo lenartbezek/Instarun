@@ -81,14 +81,26 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
                 int minutes = (int) (t / 60000 % 60);
                 time.setText(String.format("%02d:%02d", minutes, seconds));
 
-                LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                        new DataPoint(0, 1),
-                        new DataPoint(1, 5),
-                        new DataPoint(2, 3),
-                        new DataPoint(3, 2),
-                        new DataPoint(4, 6)
-                });
-                graph.addSeries(series);
+
+                int trackPointsSize = run.track.getTracks().get(0).getTrackSegments().get(0).getTrackPoints().size();
+
+                LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+                DataPoint[] dt = new DataPoint[trackPointsSize];
+
+                try {
+                    for (int i = 0; i < trackPointsSize; i++) {
+                        Double y = 3.0;//run.track.getTracks().get(0).getTrackSegments().get(0).getTrackPoints().get(i).getElevation();
+                        Double x = (double) run.track.getTracks().get(0).getTrackSegments().get(0).getTrackPoints().get(i).getTime().getMillis();
+                        DataPoint dp = new DataPoint(x,y);
+                        dt[i] = dp;
+                    }
+
+                    series = new LineGraphSeries<>(dt);
+                    graph.addSeries(series);
+
+                } catch (Exception ex) {
+                    title.setText(ex.toString());
+                }
             }
         }
         // Initialize Google Map
