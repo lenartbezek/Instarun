@@ -100,7 +100,6 @@ public class TrackRecorderService extends Service implements LocationListener, S
         handleTrackUpdate();
 
         resume();
-        RecordingNotification.notify(singleton.getApplicationContext(), 0, 0);
     }
 
     /**
@@ -109,6 +108,8 @@ public class TrackRecorderService extends Service implements LocationListener, S
     public static void resume() {
         if (!singleton.ready) ready();
         singleton.tracking = true;
+
+        singleton.startForeground(300, RecordingNotification.build(singleton));
     }
 
     /**
@@ -224,7 +225,6 @@ public class TrackRecorderService extends Service implements LocationListener, S
 
         if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
             steps++;
-            RecordingNotification.notify(singleton.getApplicationContext(), getSteps(), getLength());
             handleStepUpdate();
         }
     }
@@ -264,6 +264,15 @@ public class TrackRecorderService extends Service implements LocationListener, S
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         ready();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags,  int startId) {
+        super.onStartCommand(intent, flags, startId);
+
+        startForeground(300, RecordingNotification.build(this));
+
+        return Service.START_STICKY;
     }
 
     @Override
