@@ -10,7 +10,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import emp.fri.si.instarun.model.Person;
 import emp.fri.si.instarun.model.Run;
+import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder> {
@@ -22,7 +27,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
 
         protected long runId;
         protected TextView vTitle;
-        protected TextView vOwner;
+        protected TextView vTime;
+        protected TextView vDate;
         protected TextView vSteps;
         protected TextView vLength;
 
@@ -30,8 +36,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
             super(v);
             context = itemView.getContext();
             v.setOnClickListener(this);
-            vTitle =  (TextView) v.findViewById(R.id.title);
-            vOwner = (TextView)  v.findViewById(R.id.owner);
+            vTitle = (TextView) v.findViewById(R.id.title);
+            vTime = (TextView) v.findViewById(R.id.time);
+            vDate = (TextView)  v.findViewById(R.id.date);
             vSteps = (TextView)  v.findViewById(R.id.steps);
             vLength = (TextView) v.findViewById(R.id.length);
         }
@@ -68,11 +75,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
         Run r = dataset.get(i);
         holder.runId = r.id;
         holder.vTitle.setText(r.title);
-        if (r.ownerId != null) {
-            holder.vOwner.setText((CharSequence) Person.get(r.ownerId));
-        } else {
-            holder.vOwner.setText("");
-        }
+
+        long time = r.endTime.getTime() - r.startTime.getTime();
+        int seconds = (int) (time / 1000 % 60);
+        int minutes = (int) (time / 60000 % 60);
+        holder.vTime.setText(String.format("%02d:%02d", minutes, seconds));
+
+        LocalTime date = new DateTime(r.startTime).toLocalTime();
+        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
+        holder.vDate.setText(df.format(date.toDateTimeToday().toDate()));
 
         String lengthText;
         if (r.length > 1000){

@@ -237,12 +237,15 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
             Intent intent = new Intent(this, FeedActivity.class);
             intent.putExtra("runId", run.id);
             startActivity(intent);
+            finish();
         }
     }
 
     private void startService() {
-        Intent serviceIntent = new Intent(this, TrackRecorderService.class);
-        startService(serviceIntent);
+        if (!TrackRecorderService.isTracking()){
+            Intent serviceIntent = new Intent(this, TrackRecorderService.class);
+            startService(serviceIntent);
+        }
 
         TrackRecorderService.addUpdateListener(updateListener);
     }

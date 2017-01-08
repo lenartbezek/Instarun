@@ -40,7 +40,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".FeedActivity" />
-        <activity android:name=".RecordActivity" />
+        <activity android:name=".RecordActivity"/>
         <activity android:name=".ViewActivity" />
 
         <service android:name=".TrackRecorderService" />
