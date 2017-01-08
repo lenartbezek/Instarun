@@ -19,8 +19,6 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
 
-    <uses-permission android:name="android.permission.VIBRATE" />
-
     <application
         android:name=".InstarunApp"
         android:allowBackup="true"
@@ -47,7 +45,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCaG6-OA9gThgUE1AG0C39TILu5PMaWmBU" />
+            android:value="@string/google_api_key" /> <!-- Resolved at compile time -->
 
     </application>
 

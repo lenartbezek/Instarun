@@ -21,17 +21,17 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/welcomeTitle" android:textColor="@android:color/white" android:textSize="36sp"
                 android:padding="16dp"
-                android:textAlignment="center" android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" android:gravity="center"/>
         <TextView
                 android:text="Looks like this will be your first run.\nTap below to start."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/welcomeSubtitle" android:textColor="@android:color/white"
                 android:breakStrategy="simple"
-                android:textAlignment="center" android:padding="32dp"
+                android:padding="32dp"
                 android:layout_centerVertical="true" android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true" android:gravity="center"/>
         <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "437124757088",
+    "project_id": "firebase-instarun"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:437124757088:android:aa7904c8bd7c783c",
+        "android_client_info": {
+          "package_name": "emp.fri.si.instarun"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "437124757088-ttoitiqihfl1uuv5idn6jas0avveoocu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "emp.fri.si.instarun",
+            "certificate_hash": "F2F1001945013CB1E5E7D69E4A5EC28AC1827EEE"
+          }
+        },
+        {
+          "client_id": "437124757088-sba973b6bisiktt32ls53lv60fa70cg8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKaQ86SBSd4yPi4z1XhVklSMk8P9r83w4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
