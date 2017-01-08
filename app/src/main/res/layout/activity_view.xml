@@ -10,13 +10,107 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="emp.fri.si.instarun.ViewActivity">
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="22dp"
-        android:id="@+id/testView" />
+        android:weightSum="1">
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="64dp">
+
+            <TextView
+                android:text="Title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textStyle="bold"
+                android:textAlignment="center" android:textSize="28sp"
+                android:id="@+id/titleLabel"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="235dp">
+
+            <fragment
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:id="@+id/mapFragment"
+                android:layout_weight="0.58" />
+
+        </LinearLayout>
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/testView" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="0.64">
+
+            <TextView
+                android:text="Distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/distanceLabel"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="Steps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/stepsLabel"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="Time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/timeLabel"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="78dp">
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/distanceTextView"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/stepsTextView"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/timeTextView"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 </RelativeLayout>
