@@ -55,6 +55,9 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.logo);
+
         stepsTextView = (TextView) findViewById(R.id.stepsTextView);
         lengthTextView = (TextView) findViewById(R.id.lengthTextView);
         timeTextView = (TextView) findViewById(R.id.timeTextView);
