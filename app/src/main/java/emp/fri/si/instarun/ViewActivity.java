@@ -24,7 +24,7 @@ import java.util.Date;
 public class ViewActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private Run run;
-    private TextView tv, distance, steps, time;
+    private TextView tv, distance, steps, time, title;
     private SupportMapFragment supportMapFragment;
     private GoogleMap map;
     private LocationManager locationManager;
@@ -37,6 +37,7 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
         distance =  (TextView) findViewById(R.id.distanceTextView);
         steps =  (TextView) findViewById(R.id.stepsTextView);
         time =  (TextView) findViewById(R.id.timeTextView);
+        title =  (TextView) findViewById(R.id.titleLabel);
 
         Intent intent = getIntent();
         if(intent != null) {
@@ -54,6 +55,7 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 distance.setText(text);
 
+                title.setText(run.title);
                 steps.setText(Integer.toString(run.steps));
 
                 long t = run.endTime.getTime() - run.startTime.getTime();
