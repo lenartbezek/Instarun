@@ -26,16 +26,14 @@ public class RecordingNotification {
      */
     private static final String NOTIFICATION_TAG = "Recording";
 
-    /**
-     * Shows the notification, or updates a previously shown notification of
-     * this type, with the given parameters.
-     */
-    public static void notify(final Context context, int steps, float length) {
+    public static Notification build(final Context context){
         final Resources res = context.getResources();
 
         final String ticker = "Recording";
         final String title = "Instarun";
-        final String text = "Recording new run";
+        final String text = TrackRecorderService.isTracking()
+                ? "Recording new run"
+                : "Ready to start recording";
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 
@@ -43,7 +41,6 @@ public class RecordingNotification {
                 // and vibration.
                 .setDefaults(Notification.FLAG_ONGOING_EVENT)
                 .setPriority(Notification.PRIORITY_MIN)
-                .setUsesChronometer(true)
                 .setOngoing(true)
 
                 // Set required fields, including the small icon, the
@@ -61,7 +58,18 @@ public class RecordingNotification {
                                 new Intent(context, RecordActivity.class),
                                 PendingIntent.FLAG_UPDATE_CURRENT));
 
-        notify(context, builder.build());
+        if (TrackRecorderService.isTracking())
+            builder.setUsesChronometer(true);
+
+        return builder.build();
+    }
+
+    /**
+     * Shows the notification, or updates a previously shown notification of
+     * this type, with the given parameters.
+     */
+    public static void notify(final Context context) {
+        notify(context, build(context));
     }
 
     @TargetApi(Build.VERSION_CODES.ECLAIR)
@@ -77,7 +85,7 @@ public class RecordingNotification {
 
     /**
      * Cancels any notifications of this type previously shown using
-     * {@link #notify(Context, int, float)}.
+     * {@link #notify(Context)}.
      */
     @TargetApi(Build.VERSION_CODES.ECLAIR)
     public static void cancel(final Context context) {

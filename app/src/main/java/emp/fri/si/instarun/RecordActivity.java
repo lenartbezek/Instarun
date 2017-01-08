@@ -46,6 +46,8 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private TrackRecorderService.UpdateListener updateListener;
     private LocationManager locationManager;
 
+    private ComponentName serviceName;
+
     private int lastLocationIndex = 1;
 
     @Override
@@ -148,6 +150,9 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     protected void onDestroy() {
         super.onDestroy();
         TrackRecorderService.removeUpdateListener(updateListener);
+
+        if (!TrackRecorderService.isTracking())
+            stopService();
     }
 
     private void onPermissionGranted() {
@@ -240,6 +245,13 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         startService(serviceIntent);
 
         TrackRecorderService.addUpdateListener(updateListener);
+    }
+
+    private void stopService(){
+        Intent serviceIntent = new Intent(this, TrackRecorderService.class);
+        stopService(serviceIntent);
+
+        TrackRecorderService.removeUpdateListener(updateListener);
     }
 
     private void buildAlertMessageNoGps() {
