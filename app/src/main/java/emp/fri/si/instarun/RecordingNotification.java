@@ -34,13 +34,8 @@ public class RecordingNotification {
         final Resources res = context.getResources();
 
         final String ticker = "Recording";
-        final String title = "Recording new run";
-
-        String lengthText =  length > 1000
-                ? String.format("%.1f km", length/1000)
-                : String.format("%.0f m", length);
-
-        final String text = String.format("Steps: %d, Length: %s", steps, lengthText);
+        final String title = "Instarun";
+        final String text = "Recording new run";
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 
@@ -48,6 +43,7 @@ public class RecordingNotification {
                 // and vibration.
                 .setDefaults(Notification.FLAG_ONGOING_EVENT)
                 .setPriority(Notification.PRIORITY_MIN)
+                .setUsesChronometer(true)
                 .setOngoing(true)
 
                 // Set required fields, including the small icon, the

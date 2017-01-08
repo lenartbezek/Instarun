@@ -5,7 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 import emp.fri.si.instarun.model.Run;
-import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
+
+import java.io.*;
 
 public class ViewActivity extends AppCompatActivity {
 
@@ -24,7 +25,25 @@ public class ViewActivity extends AppCompatActivity {
             if (bundle != null) {
                 long id = bundle.getLong("runId");
                 run = Run.get(id);
-                tv.setText(run.title);
+                try{
+                    FileInputStream fis = openFileInput("track-"+id+".gpx");
+                    InputStreamReader isr = new InputStreamReader(fis);
+                    BufferedReader bufferedReader = new BufferedReader(isr);
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    bufferedReader.close();
+                    isr.close();
+                    fis.close();
+                    tv.setText(sb.toString());
+                } catch (FileNotFoundException e) {
+                    tv.setText(e.toString());
+                } catch (IOException e) {
+                    tv.setText(e.toString());
+                }
+                tv.setText(tv.getText() + "\n" +run.track);
             }
         }
     }

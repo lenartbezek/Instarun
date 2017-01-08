@@ -49,7 +49,6 @@ public class Run {
     public int steps;
 
     public Gpx track;
-    public String trackFile;
 
     public Date startTime;
     public Date endTime;
@@ -72,7 +71,7 @@ public class Run {
         RunDbHelper db = new RunDbHelper(InstarunApp.getContext());
 
         Run run = db.read(id);
-        run.track = GpxHelper.readFromFile("track"+id+".gpx");
+        run.track = GpxHelper.readFromFile("track-"+id+".gpx");
         return run;
     }
 

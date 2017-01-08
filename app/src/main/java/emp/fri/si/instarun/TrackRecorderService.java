@@ -130,7 +130,6 @@ public class TrackRecorderService extends Service implements LocationListener, S
             singleton.ready = false;
             singleton.tracking = false;
             singleton.endTime = new Date();
-            RecordingNotification.cancel(singleton.getApplicationContext());
 
             singleton.stopSelf();
         }
@@ -214,7 +213,6 @@ public class TrackRecorderService extends Service implements LocationListener, S
         if (tracking) {
             track.add(loc);
             handleTrackUpdate();
-            RecordingNotification.notify(singleton.getApplicationContext(), getSteps(), getLength());
         }
     }
 
@@ -270,13 +268,13 @@ public class TrackRecorderService extends Service implements LocationListener, S
 
     @Override
     public void onDestroy() {
-        stop();
+        singleton.ready = false;
+        singleton.tracking = false;
         clearUpdateListeners();
     }
 
     public interface UpdateListener {
         void onStepUpdate();
-
         void onTrackUpdate();
     }
 }

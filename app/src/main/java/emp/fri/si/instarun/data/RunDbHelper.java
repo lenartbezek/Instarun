@@ -24,7 +24,6 @@ public class RunDbHelper extends SQLiteOpenHelper {
             "title TEXT, "+
             "length REAL, " +
             "steps REAL, " +
-            "trackFile TEXT, " +
             "startIsoTime TEXT, " +
             "endIsoTime TEXT)";
 
@@ -75,7 +74,6 @@ public class RunDbHelper extends SQLiteOpenHelper {
         values.put("title", run.title);
         values.put("length", run.length);
         values.put("steps", run.steps);
-        values.put("trackFile", run.trackFile);
         values.put("startIsoTime", IsoDateHelper.dateToIsoString(run.startTime));
         values.put("endIsoTime", IsoDateHelper.dateToIsoString(run.endTime));
 
@@ -101,7 +99,6 @@ public class RunDbHelper extends SQLiteOpenHelper {
         values.put("title", run.title);
         values.put("length", run.length);
         values.put("steps", run.steps);
-        values.put("trackFile", run.trackFile);
         values.put("startIsoTime", IsoDateHelper.dateToIsoString(run.startTime));
         values.put("endIsoTime", IsoDateHelper.dateToIsoString(run.endTime));
 
@@ -141,7 +138,6 @@ public class RunDbHelper extends SQLiteOpenHelper {
                 "title",
                 "length",
                 "steps",
-                "trackFile",
                 "startIsoTime",
                 "endIsoTime"
         };
@@ -169,7 +165,6 @@ public class RunDbHelper extends SQLiteOpenHelper {
                 run.title = cursor.getString(cursor.getColumnIndex("title"));
                 run.length = cursor.getFloat(cursor.getColumnIndex("length"));
                 run.steps = cursor.getInt(cursor.getColumnIndex("steps"));
-                run.trackFile = cursor.getString(cursor.getColumnIndex("trackFile"));
                 run.startTime = IsoDateHelper.isoStringToDate(cursor.getString(cursor.getColumnIndex("startIsoTime")));
                 run.endTime = IsoDateHelper.isoStringToDate(cursor.getString(cursor.getColumnIndex("endIsoTime")));
                 run.isSaved = true;
@@ -197,7 +192,6 @@ public class RunDbHelper extends SQLiteOpenHelper {
                 "title",
                 "length",
                 "steps",
-                "trackFile",
                 "startIsoTime",
                 "endIsoTime"
         };
@@ -223,7 +217,6 @@ public class RunDbHelper extends SQLiteOpenHelper {
                 run.title = cursor.getString(cursor.getColumnIndex("title"));
                 run.length = cursor.getFloat(cursor.getColumnIndex("length"));
                 run.steps = cursor.getInt(cursor.getColumnIndex("steps"));
-                run.trackFile = cursor.getString(cursor.getColumnIndex("trackFile"));
                 run.startTime = IsoDateHelper.isoStringToDate(cursor.getString(cursor.getColumnIndex("startIsoTime")));
                 run.endTime = IsoDateHelper.isoStringToDate(cursor.getString(cursor.getColumnIndex("endIsoTime")));
                 run.isSaved = true;

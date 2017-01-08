@@ -32,29 +32,30 @@ public class GpxHelper {
     public static boolean writeToFile(String path, String name, Gpx track) {
 
         String header = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?><gpx xmlns=\"http://www.topografix.com/GPX/1/1\" creator=\"MapSource 6.15.5\" version=\"1.1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"  xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\"><trk>\n";
-        String nameHeader = "<name>" + name + "</name><trkseg>\n";
+        String nameHeader = "<name>" + name + "</name>";
 
-        String segments = "";
+        String segments = "<trkseg>";
         for (TrackPoint p : track.getTracks().get(0).getTrackSegments().get(0).getTrackPoints()) {
-            DateTime time = p.getTime();
-            if (time == null) continue;
-            String date = IsoDateHelper.dateToIsoString(time.toDate());
-            segments += "<trkpt lat=\"" + p.getLatitude() + "\" lon=\"" + p.getLongitude() + "\"><time>" + date + "</time></trkpt>\n";
+            String date = IsoDateHelper.dateToIsoString(p.getTime().toDate());
+            segments += "<trkpt lat=\"" + p.getLatitude() + "\" "+
+                               "lon=\"" + p.getLongitude() + "\">"+
+                            "<time>" + date + "</time>"+
+                        "</trkpt>";
         }
+        segments += "</trkseg>";
 
-        String footer = "</trkseg></trk></gpx>";
+        String footer = "</trk></gpx>";
 
         try {
             FileOutputStream fos = InstarunApp.getInstance().openFileOutput(path, Context.MODE_PRIVATE);
             fos.write(header.getBytes());
-            fos.write(name.getBytes());
+            fos.write(nameHeader.getBytes());
             fos.write(segments.getBytes());
             fos.write(footer.getBytes());
             fos.flush();
             fos.close();
             return true;
         } catch (IOException e) {
-            Log.e("Gpx", Log.getStackTraceString(e));
             return false;
         }
     }
@@ -67,11 +68,12 @@ public class GpxHelper {
     public static Gpx readFromFile(String path){
         GPXParser gpxParser = new GPXParser();
         try {
-            FileInputStream stream = new FileInputStream(path);
+            FileInputStream stream = InstarunApp.getInstance().openFileInput(path);
             Gpx gpx = gpxParser.parse(stream);
             stream.close();
             return gpx;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -92,6 +94,7 @@ public class GpxHelper {
             pointBuilder.setLatitude(loc.getLatitude());
             pointBuilder.setLongitude(loc.getLongitude());
             pointBuilder.setElevation(loc.getAltitude());
+            pointBuilder.setTime(new DateTime(loc.getTime()).toDateTimeISO());
             points[i] = pointBuilder.build();
         }
         tsBuilder.setTrackPoints(Arrays.asList(points));

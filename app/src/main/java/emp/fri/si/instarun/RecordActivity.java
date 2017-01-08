@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -22,8 +23,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.*;
 import emp.fri.si.instarun.model.Run;
 
 import java.util.Date;
@@ -45,6 +45,8 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private Runnable updateCurrentTime;
     private TrackRecorderService.UpdateListener updateListener;
     private LocationManager locationManager;
+
+    private int lastLocationIndex = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +87,16 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
                     text = String.format("%.0f m", length);
                 }
                 lengthTextView.setText(text);
-                // TODO: Draw track on map
+
+                // Draw trail
+                for (int i = lastLocationIndex; i < TrackRecorderService.getTrack().size(); i++){
+                    Location a = TrackRecorderService.getTrack().get(i-1);
+                    Location b = TrackRecorderService.getTrack().get(i);
+                    map.addPolyline(new PolylineOptions()
+                        .add(new LatLng(a.getLatitude(), a.getLongitude()), new LatLng(b.getLatitude(), b.getLongitude()))
+                            .width(5)
+                            .color(Color.BLUE));
+                }
             }
         };
 
