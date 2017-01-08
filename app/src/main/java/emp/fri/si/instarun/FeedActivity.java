@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
+import emp.fri.si.instarun.data.RunDbHelper;
 import emp.fri.si.instarun.model.Person;
 import emp.fri.si.instarun.model.Run;
 
@@ -29,7 +30,16 @@ public class FeedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feed);
+
+        // Display welcome screen on first time
+        RunDbHelper db = new RunDbHelper(this);
+        boolean firstTime = db.count() == 0;
+
+        if (firstTime){
+            setContentView(R.layout.activity_welcome);
+        } else {
+            setContentView(R.layout.activity_feed);
+        }
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -38,6 +48,9 @@ public class FeedActivity extends AppCompatActivity {
                 startRecordActivity();
             }
         });
+
+        // No need to do anything else but bind FAB on first time
+        if (firstTime) return;
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 

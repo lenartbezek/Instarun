@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
+import emp.fri.si.instarun.data.RunDbHelper;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -19,7 +20,6 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 startActivity(new Intent(SplashActivity.this, FeedActivity.class));
-                finish();
             }
         }, 1000);
     }

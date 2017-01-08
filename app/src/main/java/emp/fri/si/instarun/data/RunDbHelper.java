@@ -229,4 +229,19 @@ public class RunDbHelper extends SQLiteOpenHelper {
         cursor.close();
         return list;
     }
+
+    /**
+     * Returns number of total saved runs.
+     * @return
+     */
+    public int count(){
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM Run", null);
+        cursor.moveToFirst();
+        int count= cursor.getInt(0);
+        cursor.close();
+
+        return count;
+    }
 }

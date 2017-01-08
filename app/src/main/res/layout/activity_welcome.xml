@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_welcome"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        tools:context="emp.fri.si.instarun.FeedActivity" android:background="@color/colorPrimary">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp" android:layout_centerVertical="true" android:layout_alignParentStart="true">
+
+        <TextView
+                android:text="Welcome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/welcomeTitle" android:textColor="@android:color/white" android:textSize="36sp"
+                android:padding="16dp"
+                android:textAlignment="center" android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"/>
+        <TextView
+                android:text="Looks like this will be your first run.\nTap below to start."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/welcomeSubtitle" android:textColor="@android:color/white"
+                android:breakStrategy="simple"
+                android:textAlignment="center" android:padding="32dp"
+                android:layout_centerVertical="true" android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"/>
+        <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                app:srcCompat="@drawable/ic_run"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" app:fabSize="normal" android:id="@+id/fab"
+                android:scaleType="center" android:layout_margin="16dp"/>
+    </RelativeLayout>
+</RelativeLayout>
