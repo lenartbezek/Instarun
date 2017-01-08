@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+//import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,14 +24,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.*;
 
 import emp.fri.si.instarun.model.Run;
 import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
 
-import java.io.*;
-import java.util.Date;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.DataPointInterface;
 
 public class ViewActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
@@ -41,6 +42,7 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap map;
     private LocationManager locationManager;
     private int lastLocationIndex = 1;
+    GraphView graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
         steps =  (TextView) findViewById(R.id.stepsTextView);
         time =  (TextView) findViewById(R.id.timeTextView);
         title =  (TextView) findViewById(R.id.titleLabel);
+        graph = (GraphView) findViewById(R.id.graph);
 
         Intent intent = getIntent();
         if(intent != null) {
@@ -78,15 +81,21 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
                 int minutes = (int) (t / 60000 % 60);
                 time.setText(String.format("%02d:%02d", minutes, seconds));
 
-
+                LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
+                        new DataPoint(0, 1),
+                        new DataPoint(1, 5),
+                        new DataPoint(2, 3),
+                        new DataPoint(3, 2),
+                        new DataPoint(4, 6)
+                });
+                graph.addSeries(series);
             }
         }
         // Initialize Google Map
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
 
-        checkAndRequestPermission();
-
+        supportMapFragment.getMapAsync(this);
     }
 
     @Override
@@ -112,17 +121,6 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        try {
-            map.setMyLocationEnabled(true);
-            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 100, this);
-
-            if (!locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER )) {
-                buildAlertMessageNoGps();
-            }
-        } catch (SecurityException e){
-            // PASS: This method shouldn't be called without permissions
-        }
 
         // Set camera to start of trail
         try {
@@ -149,50 +147,6 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (Exception ex) {
 
         }
-    }
-
-    private void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("GPS is disabled");
-        builder.setMessage("Enable GPS to record your run.")
-                .setCancelable(false)
-                .setPositiveButton("Enable", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        dialog.cancel();
-                        Intent returnIntent = new Intent();
-                        setResult(Activity.RESULT_CANCELED, returnIntent);
-                        finish();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    private void checkAndRequestPermission() {
-        // Check for permission
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Request permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    },
-                    PERMISSION_REQUEST_CODE);
-        } else {
-            // Already have permission
-            onPermissionGranted();
-        }
-    }
-
-    private void onPermissionGranted() {
-        supportMapFragment.getMapAsync(this);
     }
 
 }
