@@ -88,8 +88,11 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
                 DataPoint[] dt = new DataPoint[trackPointsSize];
 
                 try {
+                    double y = 300.0;
                     for (int i = 0; i < trackPointsSize; i++) {
-                        Double y = 3.0;//run.track.getTracks().get(0).getTrackSegments().get(0).getTrackPoints().get(i).getElevation();
+                        if(run.track.getTracks().get(0).getTrackSegments().get(0).getTrackPoints().get(i).getElevation() != null) {
+                            y = run.track.getTracks().get(0).getTrackSegments().get(0).getTrackPoints().get(i).getElevation();
+                        }
                         Double x = (double) run.track.getTracks().get(0).getTrackSegments().get(0).getTrackPoints().get(i).getTime().getMillis();
                         DataPoint dp = new DataPoint(x,y);
                         dt[i] = dp;
