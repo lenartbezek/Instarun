@@ -2,6 +2,9 @@
     <string name="action_reply">Reply</string>
     <string name="action_settings">Settings</string>
     <string name="action_share">Share</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_rename">Rename</string>
+    <string name="action_export">Export</string>
     <string name="app_name" translatable="false">Instarun</string>
     <string name="welcome_title">Welcome</string>
     <string name="welcome_message">Looks like this will be your first run.\nTap below to start.</string>
@@ -10,7 +13,6 @@
     <string name="status_ready">READY</string>
     <string name="status_recording">RECORDING</string>
     <string name="status_stopped">STOPPED</string>
-    <string name="action_delete">Delete</string>
     <string name="label_time">Time:</string>
     <string name="label_gain">Gain:</string>
     <string name="label_speed">Average speed:</string>

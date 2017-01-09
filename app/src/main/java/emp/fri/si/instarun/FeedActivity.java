@@ -19,12 +19,14 @@ import java.util.*;
 
 public class FeedActivity extends AppCompatActivity {
 
+    public static List<Run> dataset = new LinkedList<>();
+    private static FeedActivity singleton;
+
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
     private RecyclerView.LayoutManager layoutManager;
     private FeedAdapter adapter;
 
-    private List<Run> dataset = new LinkedList<>();
     private boolean firstTime;
 
     public static final int REQUEST_RECORD = 1;
@@ -32,6 +34,8 @@ public class FeedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        singleton = this;
 
         // Display welcome screen on first time
         RunDbHelper db = new RunDbHelper(this);
@@ -88,15 +92,19 @@ public class FeedActivity extends AppCompatActivity {
         if (firstTime) finish();
     }
 
+    public static void notifyDataSetChanged(){
+        if (singleton != null)
+            singleton.adapter.notifyDataSetChanged();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == REQUEST_RECORD) {
             if(resultCode == Activity.RESULT_OK){
                 long runId = data.getLongExtra("runId", -1);
                 if (runId > 0){
                     // Update dataset
-                    dataset.add(Run.get(runId));
+                    dataset.add(0, Run.get(runId));
                     adapter.notifyDataSetChanged();
 
                     // Forward to ViewActivity

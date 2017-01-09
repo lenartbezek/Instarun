@@ -12,6 +12,8 @@ import emp.fri.si.instarun.model.Person;
 import emp.fri.si.instarun.model.Run;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -81,9 +83,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
         int minutes = (int) (time / 60000 % 60);
         holder.vTime.setText(String.format("%02d:%02d", minutes, seconds));
 
-        LocalTime date = new DateTime(r.startTime).toLocalTime();
-        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm", context.getResources().getConfiguration().locale);
-        holder.vDate.setText(df.format(date.toDateTimeToday().toDate()));
+        DateTimeFormatter df = DateTimeFormat.forPattern("EEE, d MMM yyyy HH:mm");
+        holder.vDate.setText(df.print(r.startTime.getTime()));
 
         String lengthText;
         if (r.length > 1000){

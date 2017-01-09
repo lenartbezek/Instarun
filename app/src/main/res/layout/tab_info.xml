@@ -8,19 +8,49 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/titleLayout">
+            android:layout_height="wrap_content" android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true">
+        <Button
+                android:text="@string/action_rename"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true" android:drawableLeft="@drawable/ic_action_rename"
+                android:drawablePadding="8dp" android:id="@+id/renameButton" android:layout_weight="1"
+                android:layout_margin="8dp"/>
+        <Button
+                android:text="@string/action_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true" android:layout_alignParentEnd="true" android:drawablePadding="8dp"
+                android:drawableLeft="@drawable/ic_action_delete" android:id="@+id/deleteButton"
+                android:layout_weight="1" android:layout_margin="8dp"/>
+    </LinearLayout>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true" android:layout_alignParentStart="true">
+
         <TextView
                 android:text="titlePlaceholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/titleTextView" android:padding="16dp"
-                android:layout_weight="0.8"/>
-    </LinearLayout>
-    <TextView
-            android:text="datePlaceholder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_weight="1"
-            android:padding="16dp" android:id="@+id/dateTextView"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" android:layout_below="@+id/titleLayout"/>
+                android:gravity="center" android:layout_alignParentTop="true" android:layout_alignParentStart="true"
+                android:textStyle="bold" android:textSize="20sp"/>
+        <TextView
+                android:text="datePlaceholder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp" android:id="@+id/dateTextView"
+                android:gravity="center"
+                android:layout_below="@+id/titleTextView" android:layout_alignParentStart="true"/>
+        <Button
+                android:text="@string/action_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:drawableLeft="@drawable/ic_action_share" android:id="@+id/shareButton"
+                android:layout_marginLeft="8dp" android:layout_marginRight="8dp" android:layout_marginTop="8dp"
+                android:layout_below="@+id/dateTextView" android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
 
 </RelativeLayout>

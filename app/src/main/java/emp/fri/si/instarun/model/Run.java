@@ -7,9 +7,7 @@ import emp.fri.si.instarun.data.GpxHelper;
 import emp.fri.si.instarun.data.RunDbHelper;
 import io.ticofab.androidgpxparser.parser.domain.Gpx;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Run {
 
@@ -81,6 +79,14 @@ public class Run {
         List<Run> runs = db.read();
         for (Run run: runs)
             run.track = GpxHelper.readFromFile("track-"+run.id+".gpx");
+        Collections.sort(runs, new Comparator<Run>() {
+            @Override
+            public int compare(Run a, Run b) {
+                return a.startTime.after(b.startTime)
+                        ? -1
+                        : 1;
+            }
+        });
         return runs;
     }
 }

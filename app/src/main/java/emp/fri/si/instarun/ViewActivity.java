@@ -1,13 +1,17 @@
 package emp.fri.si.instarun;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
-import android.widget.TabHost;
-import android.widget.TextView;
+import android.widget.*;
 
 //import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.maps.CameraUpdate;
@@ -22,7 +26,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import com.google.maps.android.SphericalUtil;
 import com.jjoe64.graphview.DefaultLabelFormatter;
-import com.jjoe64.graphview.LegendRenderer;
 import emp.fri.si.instarun.model.Run;
 import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
 
@@ -31,10 +34,15 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import static android.support.v4.content.FileProvider.getUriForFile;
 
 public class ViewActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -106,6 +114,28 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         graph = (GraphView) findViewById(R.id.graph);
 
+        Button shareButton = (Button) findViewById(R.id.shareButton);
+        Button renameButton = (Button) findViewById(R.id.renameButton);
+        Button deleteButton = (Button) findViewById(R.id.deleteButton);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                export();
+            }
+        });
+        renameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rename();
+            }
+        });
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                delete();
+            }
+        });
+
         Intent intent = getIntent();
         if(intent != null) {
             Bundle bundle = intent.getExtras();
@@ -119,9 +149,8 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
                 titleTextView.setText(run.title);
 
                 // Date
-                LocalTime date = new DateTime(run.startTime).toLocalTime();
-                DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm", getResources().getConfiguration().locale);
-                dateTextView.setText(df.format(date.toDateTimeToday().toDate()));
+                DateTimeFormatter df = DateTimeFormat.forPattern("EEE, d MMM yyyy HH:mm");
+                dateTextView.setText(df.print(run.startTime.getTime()));
 
                 // Length
                 String text = run.length > 1000
@@ -313,5 +342,77 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
         b.setLongitude(to.getLongitude());
 
         return a.distanceTo(b);
+    }
+
+    private void export(){
+        File file = new File(getFilesDir(), "track-"+run.id+".gpx");
+        Uri uri = getUriForFile(this, "emp.fri.si.instarun", file);
+
+        Intent shareIntent = new Intent();
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("application/gpx+xml");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.action_export)));
+    }
+
+    private void delete(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete")
+                .setMessage("Are you sure you want to delete this run?")
+                .setCancelable(false)
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        run.delete();
+                        for (int i = 0; i < FeedActivity.dataset.size(); i++){
+                            Run r = FeedActivity.dataset.get(i);
+                            if (r.id == run.id){
+                                FeedActivity.dataset.remove(i);
+                                break;
+                            }
+                        }
+                        FeedActivity.notifyDataSetChanged();
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void rename() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input)
+                .setTitle("Rename")
+                .setMessage("Enter a new name for your run:")
+                .setCancelable(false)
+                .setPositiveButton("Rename", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        run.title = input.getText().toString();
+                        titleTextView.setText(run.title);
+                        run.save();
+                        for (int i = 0; i < FeedActivity.dataset.size(); i++){
+                            Run r = FeedActivity.dataset.get(i);
+                            if (r.id == run.id){
+                                FeedActivity.dataset.set(i, run);
+                                break;
+                            }
+                        }
+                        FeedActivity.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 }
