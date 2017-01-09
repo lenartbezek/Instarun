@@ -39,6 +39,7 @@ public class GpxHelper {
             String date = IsoDateHelper.dateToIsoString(p.getTime().toDate());
             segments += "<trkpt lat=\"" + p.getLatitude() + "\" "+
                                "lon=\"" + p.getLongitude() + "\">"+
+                            "<ele>" + p.getElevation() + "</ele>"+
                             "<time>" + date + "</time>"+
                         "</trkpt>";
         }

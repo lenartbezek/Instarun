@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_reply">Odgovori</string>
+    <string name="action_settings">Nastavitve</string>
+    <string name="action_share">Deli</string>
+    <string name="label_length">Dolžina:</string>
+    <string name="label_steps">Koraki:</string>
+    <string name="status_ready">PRIPRAVLJEN</string>
+    <string name="status_recording">SNEMANJE</string>
+    <string name="welcome_title">Hej</string>
+    <string name="status_stopped">USTAVLJEN</string>
+    <string name="welcome_message">Zgleda da bo to tvoj prvi tek. Tapni gumb spodaj da začneš.</string>
+</resources>

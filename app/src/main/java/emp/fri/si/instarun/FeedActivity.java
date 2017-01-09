@@ -25,6 +25,7 @@ public class FeedActivity extends AppCompatActivity {
     private FeedAdapter adapter;
 
     private List<Run> dataset = new LinkedList<>();
+    private boolean firstTime;
 
     public static final int REQUEST_RECORD = 1;
 
@@ -34,7 +35,7 @@ public class FeedActivity extends AppCompatActivity {
 
         // Display welcome screen on first time
         RunDbHelper db = new RunDbHelper(this);
-        boolean firstTime = db.count() == 0;
+        firstTime = db.count() == 0;
 
         if (firstTime){
             setContentView(R.layout.activity_welcome);
@@ -83,6 +84,8 @@ public class FeedActivity extends AppCompatActivity {
     private void startRecordActivity(){
         Intent intent = new Intent(this, RecordActivity.class);
         startActivityForResult(intent, REQUEST_RECORD);
+
+        if (firstTime) finish();
     }
 
     @Override

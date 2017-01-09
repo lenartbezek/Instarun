@@ -1,21 +1,19 @@
 <resources>
-    <string name="app_name">Instarun</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_maps">Map</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-    <string name="recording_notification_title_template">Recording: %1$s</string>
-
-    <!-- TODO: remove this placeholder text -->
-    <string name="recording_notification_placeholder_text_template">You said %1$s and lorem ipsum dolor sit amet,
-        consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit vel semper venenatis, magna odio volutpat
-        velit, at ullamcorper nulla lacus sed turpis. Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed
-        nisl sem, ullamcorper ornare lacus. Duis ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis
-        viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec tortor.
-    </string>
-
-    <string name="action_share">Share</string>
     <string name="action_reply">Reply</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_share">Share</string>
+    <string name="app_name" translatable="false">Instarun</string>
+    <string name="welcome_title">Welcome</string>
+    <string name="welcome_message">Looks like this will be your first run.\nTap below to start.</string>
+    <string name="label_length">Length:</string>
+    <string name="label_steps">Steps:</string>
+    <string name="status_ready">READY</string>
+    <string name="status_recording">RECORDING</string>
+    <string name="status_stopped">STOPPED</string>
+    <string name="action_delete">Delete</string>
+    <string name="label_time">Time:</string>
+    <string name="label_gain">Gain:</string>
+    <string name="label_speed">Average speed:</string>
+    <string name="label_incline">Average incline:</string>
+
 </resources>

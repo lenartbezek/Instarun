@@ -107,8 +107,15 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
         // Call listener if already tracking
         if (TrackRecorderService.isTracking()){
-            updateListener.onStepUpdate();
-            updateListener.onTrackUpdate();
+            float length = TrackRecorderService.getLength();
+            String text;
+            if (length > 1000) {
+                text = String.format("%.1f km", length / 1000);
+            } else {
+                text = String.format("%.0f m", length);
+            }
+            lengthTextView.setText(text);
+            stepsTextView.setText(String.valueOf(TrackRecorderService.getSteps()));
         }
 
         // Update timer when recording
@@ -288,7 +295,14 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         try {
             map.setMyLocationEnabled(true);
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 100, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null){
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+                map.moveCamera(cameraUpdate);
+            }
 
             if (!locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER )) {
                 buildAlertMessageNoGps();

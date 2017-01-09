@@ -16,7 +16,7 @@
             android:layout_height="300dp" android:layout_centerVertical="true" android:layout_alignParentStart="true">
 
         <TextView
-                android:text="Welcome"
+                android:text="@string/welcome_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/welcomeTitle" android:textColor="@android:color/white" android:textSize="36sp"
@@ -24,7 +24,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true" android:gravity="center"/>
         <TextView
-                android:text="Looks like this will be your first run.\nTap below to start."
+                android:text="@string/welcome_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/welcomeSubtitle" android:textColor="@android:color/white"

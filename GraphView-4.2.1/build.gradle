@@ -1,2 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('GraphView-4.2.1.jar'))

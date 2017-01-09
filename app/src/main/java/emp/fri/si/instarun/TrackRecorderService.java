@@ -83,7 +83,6 @@ public class TrackRecorderService extends Service implements LocationListener, S
 
         // Register track recorder as location listener
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, singleton);
-        singleton.currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         singleton.ready = true;
     }
@@ -96,6 +95,10 @@ public class TrackRecorderService extends Service implements LocationListener, S
         singleton.track.clear();
         singleton.steps = 0;
         singleton.startTime = new Date();
+
+        singleton.currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        singleton.track.add(singleton.currentLocation);
+
         handleStepUpdate();
         handleTrackUpdate();
 

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/graph"
+            android:layout_alignParentStart="true" android:layout_weight="1" android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" android:layout_marginTop="16dp"/>
+    <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+            android:layout_margin="16dp" android:rowCount="2" android:columnCount="3"
+    >
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_row="0" android:layout_rowWeight="1"
+                android:layout_column="0" android:layout_columnWeight="1"
+                android:background="@drawable/cast_skip_ad_label_border">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_stat_step" android:gravity="center" android:scaleX="0.82"
+                    android:scaleY="0.82" android:padding="2dp"/>
+            <TextView
+                    android:text="0000"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center" android:textSize="16sp"
+                    android:id="@+id/stepsTextView"
+            />
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_column="0" android:layout_columnWeight="1"
+                android:layout_row="1" android:layout_rowWeight="1"
+                android:background="@drawable/cast_skip_ad_label_border">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_stat_length" android:gravity="center" android:scaleX="0.82"
+                    android:scaleY="0.82" android:padding="2dp"/>
+            <TextView
+                    android:text="000 m"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center" android:textSize="16sp"
+                    android:id="@+id/lengthTextView"
+            />
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_column="1" android:layout_columnWeight="1"
+                android:layout_row="0" android:layout_rowWeight="1"
+                android:background="@drawable/cast_skip_ad_label_border">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_stat_incline" android:gravity="center" android:scaleX="0.82"
+                    android:scaleY="0.82" android:padding="2dp"/>
+            <TextView
+                    android:text="00 %"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center" android:textSize="16sp"
+                    android:id="@+id/inclineTextView"
+            />
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_column="1" android:layout_row="1"
+                android:layout_rowWeight="1" android:layout_columnWeight="1"
+                android:background="@drawable/cast_skip_ad_label_border">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_stat_speed" android:gravity="center" android:scaleX="0.82"
+                    android:scaleY="0.82" android:padding="2dp"/>
+            <TextView
+                    android:text="00 km/h"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center" android:textSize="16sp"
+                    android:id="@+id/speedTextView"
+            />
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_column="2" android:layout_row="0"
+                android:layout_rowWeight="1" android:layout_columnWeight="1"
+                android:background="@drawable/cast_skip_ad_label_border">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_stat_time" android:gravity="center" android:scaleX="0.82"
+                    android:scaleY="0.82" android:padding="2dp"/>
+            <TextView
+                    android:text="00:00"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center" android:textSize="16sp"
+                    android:id="@+id/timeTextView"
+            />
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_column="2" android:layout_columnWeight="1"
+                android:layout_row="1" android:layout_rowWeight="1"
+                android:background="@drawable/cast_skip_ad_label_border">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_stat_cal" android:gravity="center" android:scaleX="0.82"
+                    android:scaleY="0.82" android:padding="2dp"/>
+            <TextView
+                    android:text="00 kcal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center" android:textSize="16sp"
+                    android:id="@+id/calTextView"
+            />
+        </LinearLayout>
+    </GridLayout>
+
+</LinearLayout>

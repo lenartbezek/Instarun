@@ -82,7 +82,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RunViewHolder>
         holder.vTime.setText(String.format("%02d:%02d", minutes, seconds));
 
         LocalTime date = new DateTime(r.startTime).toLocalTime();
-        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
+        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm", context.getResources().getConfiguration().locale);
         holder.vDate.setText(df.format(date.toDateTimeToday().toDate()));
 
         String lengthText;

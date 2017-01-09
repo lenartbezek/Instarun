@@ -16,7 +16,7 @@
                 android:layout_height="wrap_content" android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:id="@+id/mapFragment" android:layout_weight="1"/>
         <TextView
-                android:text="READY"
+                android:text="@string/status_ready"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:layout_below="@+id/mapView"
                 android:layout_alignParentStart="true" android:layout_alignParentEnd="true"
@@ -30,7 +30,7 @@
                 android:layout_alignParentStart="true" android:layout_height="wrap_content" android:padding="12dp"
                 android:id="@+id/detailHolderLayout">
             <TextView
-                    android:text="Steps:"
+                    android:text="@string/label_steps"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:layout_weight="0.25" android:id="@+id/stepsLabel"
                     android:textAlignment="textEnd" android:paddingEnd="4dp" android:gravity="right"/>
@@ -43,7 +43,7 @@
                     android:layout_alignParentBottom="true" android:layout_toEndOf="@+id/mapView"
                     android:layout_weight="0.25" android:paddingLeft="4dp"/>
             <TextView
-                    android:text="Length:"
+                    android:text="@string/label_length"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:layout_weight="0.25"
                     android:textAlignment="textEnd" android:paddingEnd="4dp" android:id="@+id/lengthLabel"
