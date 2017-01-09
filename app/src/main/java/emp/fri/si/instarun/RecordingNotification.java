@@ -45,7 +45,7 @@ public class RecordingNotification {
 
                 // Set required fields, including the small icon, the
                 // notification title, and text.
-                .setSmallIcon(R.drawable.ic_recording_run)
+                .setSmallIcon(R.drawable.ic_run)
                 .setLargeIcon(BitmapFactory.decodeResource(InstarunApp.getContext().getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(title)
                 .setContentText(text)
