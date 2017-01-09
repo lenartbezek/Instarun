@@ -10,4 +10,15 @@
     <string name="welcome_title">Hej</string>
     <string name="status_stopped">USTAVLJEN</string>
     <string name="welcome_message">Zgleda da bo to tvoj prvi tek. Tapni gumb spodaj da začneš.</string>
+    <string name="action_delete">Izbriši</string>
+    <string name="action_export">Izvozi</string>
+    <string name="action_rename">Preimenuj</string>
+    <string name="tab_graph">Graf</string>
+    <string name="tab_info">Info</string>
+    <string name="tab_map">Zemljevid</string>
+    <string name="marker_finish">Začetek</string>
+    <string name="marker_start">Konec</string>
+    <string name="action_cancel">Prekliči</string>
+    <string name="alert_delete">Ali si prepričan da želiš izbrisati ta tek?</string>
+    <string name="alert_rename">Vnesite novo ime za ta tek:</string>
 </resources>

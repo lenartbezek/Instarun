@@ -13,9 +13,13 @@
     <string name="status_ready">READY</string>
     <string name="status_recording">RECORDING</string>
     <string name="status_stopped">STOPPED</string>
-    <string name="label_time">Time:</string>
-    <string name="label_gain">Gain:</string>
-    <string name="label_speed">Average speed:</string>
-    <string name="label_incline">Average incline:</string>
+    <string name="tab_info">Info</string>
+    <string name="tab_map">Map</string>
+    <string name="tab_graph">Graph</string>
+    <string name="marker_start">Start</string>
+    <string name="marker_finish">Finish</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="alert_delete">Are you sure you want to delete this run?</string>
+    <string name="alert_rename">Enter a new name for your run:</string>
 
 </resources>

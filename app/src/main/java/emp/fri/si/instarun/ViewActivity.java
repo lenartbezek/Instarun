@@ -72,19 +72,19 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Tab 1
         TabHost.TabSpec spec = tabHost.newTabSpec("Info");
         spec.setContent(R.id.tab1);
-        spec.setIndicator("Info");
+        spec.setIndicator(getResources().getString(R.string.tab_info));
         tabHost.addTab(spec);
 
         //Tab 2
         spec = tabHost.newTabSpec("Map");
         spec.setContent(R.id.tab2);
-        spec.setIndicator("Map");
+        spec.setIndicator(getResources().getString(R.string.tab_map));
         tabHost.addTab(spec);
 
         //Tab 3
         spec = tabHost.newTabSpec("Graph");
         spec.setContent(R.id.tab3);
-        spec.setIndicator("Graph");
+        spec.setIndicator(getResources().getString(R.string.tab_graph));
         tabHost.addTab(spec);
 
         // Do heavy data initializations lazily on tab switch
@@ -223,11 +223,11 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Draw start and finish markers
         map.addMarker(new MarkerOptions()
             .position(new LatLng(start.getLatitude(), start.getLongitude()))
-            .title("Start")
+            .title(getResources().getString(R.string.marker_start))
             .alpha(0.5f));
         map.addMarker(new MarkerOptions()
             .position(new LatLng(finish.getLatitude(), finish.getLongitude()))
-            .title("Finish")
+            .title(getResources().getString(R.string.marker_finish))
             .alpha(0.5f));
     }
 
@@ -358,10 +358,11 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void delete(){
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Delete")
-                .setMessage("Are you sure you want to delete this run?")
+        builder.setTitle(getResources().getString(R.string.action_delete))
+                .setMessage(getResources().getString(R.string.alert_delete))
                 .setCancelable(false)
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getResources().getString(R.string.action_delete),
+                        new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         run.delete();
                         for (int i = 0; i < FeedActivity.dataset.size(); i++){
@@ -375,7 +376,8 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
                         finish();
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getResources().getString(R.string.action_cancel),
+                        new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         dialog.cancel();
                     }
@@ -387,12 +389,14 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void rename() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText input = new EditText(this);
+        input.setText(run.title);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input)
-                .setTitle("Rename")
-                .setMessage("Enter a new name for your run:")
+                .setTitle(getResources().getString(R.string.action_rename))
+                .setMessage(getResources().getString(R.string.alert_rename))
                 .setCancelable(false)
-                .setPositiveButton("Rename", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getResources().getString(R.string.action_rename),
+                        new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         run.title = input.getText().toString();
                         titleTextView.setText(run.title);
@@ -407,7 +411,7 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
                         FeedActivity.notifyDataSetChanged();
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getResources().getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         dialog.cancel();
                     }
