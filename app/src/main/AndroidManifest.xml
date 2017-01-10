@@ -37,9 +37,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FeedActivity" />
-        <activity android:name=".RecordActivity"/>
-        <activity android:name=".ViewActivity" />
+        <activity android:name=".FeedActivity"
+                  android:configChanges="orientation|screenSize"/>
+        <activity android:name=".RecordActivity"
+                  android:configChanges="orientation|screenSize"/>
+        <activity android:name=".ViewActivity"
+                  android:configChanges="orientation|screenSize"/>
 
         <service android:name=".TrackRecorderService" />
 

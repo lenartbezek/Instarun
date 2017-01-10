@@ -82,9 +82,7 @@ public class Run {
         Collections.sort(runs, new Comparator<Run>() {
             @Override
             public int compare(Run a, Run b) {
-                return a.startTime.after(b.startTime)
-                        ? -1
-                        : 1;
+                return a.startTime.after(b.startTime) ? -1 : 1;
             }
         });
         return runs;

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
@@ -46,8 +47,6 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private TrackRecorderService.UpdateListener updateListener;
     private LocationManager locationManager;
 
-    private ComponentName serviceName;
-
     private int lastLocationIndex = 1;
 
     @Override
@@ -57,6 +56,11 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.logo);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            getSupportActionBar().hide();
+        else
+            getSupportActionBar().show();
 
         stepsTextView = (TextView) findViewById(R.id.stepsTextView);
         lengthTextView = (TextView) findViewById(R.id.lengthTextView);
@@ -165,6 +169,16 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
             stopService();
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            getSupportActionBar().hide();
+        else
+            getSupportActionBar().show();
+    }
+
     private void onPermissionGranted() {
         supportMapFragment.getMapAsync(this);
         startService();
@@ -216,13 +230,13 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private void resetRecording(){
         TrackRecorderService.pause();
         recordButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flag, getTheme()));
-        statusLabel.setText("READY");
+        statusLabel.setText(getResources().getString(R.string.status_ready));
     }
 
     private void startRecording() {
         TrackRecorderService.start();
         recordButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flag, getTheme()));
-        statusLabel.setText("RECORDING");
+        statusLabel.setText(getResources().getString(R.string.status_recording));
 
         timeTextView.setText("00:00");
         timeUpdateHandler.postDelayed(updateCurrentTime, 1000);
@@ -231,7 +245,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private void stopRecording() {
         TrackRecorderService.stop();
         recordButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_run, getTheme()));
-        statusLabel.setText("STOPPED");
+        statusLabel.setText(getResources().getString(R.string.status_stopped));
 
         timeUpdateHandler.removeCallbacks(updateCurrentTime);
 
@@ -269,15 +283,15 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("GPS is disabled");
-        builder.setMessage("Enable GPS to record your run.")
+        builder.setTitle(getResources().getString(R.string.action_enablegps));
+        builder.setMessage(getResources().getString(R.string.alert_gps))
                 .setCancelable(false)
-                .setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getResources().getString(R.string.action_enable), new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getResources().getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         dialog.cancel();
                         Intent returnIntent = new Intent();

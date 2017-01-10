@@ -2,7 +2,7 @@
 <resources>
     <string name="action_reply">Odgovori</string>
     <string name="action_settings">Nastavitve</string>
-    <string name="action_share">Deli</string>
+    <string name="action_share">Izvozi</string>
     <string name="label_length">Dolžina:</string>
     <string name="label_steps">Koraki:</string>
     <string name="status_ready">PRIPRAVLJEN</string>
@@ -20,5 +20,8 @@
     <string name="marker_start">Konec</string>
     <string name="action_cancel">Prekliči</string>
     <string name="alert_delete">Ali si prepričan da želiš izbrisati ta tek?</string>
-    <string name="alert_rename">Vnesite novo ime za ta tek:</string>
+    <string name="alert_rename">Vnesite novo ime za ta tek</string>
+    <string name="alert_gps">Za snemanje je potrebno vključiti GPS</string>
+    <string name="action_enablegps">Vključite GPS</string>
+    <string name="action_enable">Vključi</string>
 </resources>

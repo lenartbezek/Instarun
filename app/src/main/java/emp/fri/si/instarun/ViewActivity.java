@@ -1,9 +1,9 @@
 package emp.fri.si.instarun;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
@@ -11,9 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.*;
 
-//import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,7 +24,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import com.google.maps.android.SphericalUtil;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import emp.fri.si.instarun.model.Run;
 import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
@@ -32,14 +31,10 @@ import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
@@ -49,7 +44,8 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Run run;
     private List<TrackPoint> points;
 
-    private TextView titleTextView, dateTextView, stepsTextView, lengthTextView, timeTextView, speedTextView, inclineTextView;
+    private TextView titleTextView, dateTextView, stepsTextView, lengthTextView, timeTextView,
+                                    speedTextView, inclineTextView, caloriesTextView;
     private GraphView graph;
     private GoogleMap map;
     private TabHost tabHost;
@@ -65,6 +61,11 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.logo);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            getSupportActionBar().hide();
+        else
+            getSupportActionBar().show();
 
         tabHost = (TabHost)findViewById(R.id.tabHost);
         tabHost.setup();
@@ -108,6 +109,7 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
         lengthTextView = (TextView) findViewById(R.id.lengthTextView);
         speedTextView = (TextView) findViewById(R.id.speedTextView);
         inclineTextView = (TextView) findViewById(R.id.inclineTextView);
+        caloriesTextView = (TextView) findViewById(R.id.calTextView);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
@@ -178,9 +180,22 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
                 speedTextView.setText(String.format("%.1f km/h", speed));
 
                 // Calories
-
+                double caloriesBase = run.steps * 0.03f;  // 0.03 kcal per step = 300 kcal per 10k steps
+                double speedModifier = Math.pow(speed / 5f, 2); // 1 at average speed of 5 km/h, increased exponentially
+                double inclineModifier = Math.pow(incline / 10f, 2);  // 0 at no incline, increased/decreased exponentially, 1 at 10% incline
+                caloriesTextView.setText(String.format("%.0f kcal", caloriesBase * (speedModifier + inclineModifier)));
             }
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            getSupportActionBar().hide();
+        else
+            getSupportActionBar().show();
     }
 
     @Override
@@ -196,21 +211,12 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
         finish.setLatitude(points.get(points.size() - 1).getLatitude());
         finish.setLongitude(points.get(points.size() - 1).getLongitude());
 
-        LatLng middle = new LatLng(
-                (start.getLatitude() + finish.getLatitude())/2,
-                (start.getLongitude() + finish.getLongitude())/2
-        );
+        double south = points.get(0).getLatitude();
+        double north = south;
+        double east = points.get(0).getLongitude();
+        double west = east;
 
-        double radius = start.distanceTo(finish) / 2;
-
-        LatLng southwest = SphericalUtil.computeOffset(middle, radius * Math.sqrt(2.0), 225);
-        LatLng northeast = SphericalUtil.computeOffset(middle, radius * Math.sqrt(2.0), 45);
-        LatLngBounds bounds = new LatLngBounds(southwest, northeast);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 10);
-        map.moveCamera(cameraUpdate);
-
-        // Draw trail
+        // Draw trail and find bounding box
         for (int i = 1; i < points.size(); i++) {
             TrackPoint a = points.get(i - 1);
             TrackPoint b = points.get(i);
@@ -218,6 +224,10 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .add(new LatLng(a.getLatitude(), a.getLongitude()), new LatLng(b.getLatitude(), b.getLongitude()))
                     .width(5)
                     .color(Color.BLUE));
+            south = Math.min(b.getLatitude(), south);
+            north = Math.max(b.getLatitude(), north);
+            west = Math.min(b.getLongitude(), east);
+            east = Math.max(b.getLongitude(), west);
         }
 
         // Draw start and finish markers
@@ -229,6 +239,16 @@ public class ViewActivity extends AppCompatActivity implements OnMapReadyCallbac
             .position(new LatLng(finish.getLatitude(), finish.getLongitude()))
             .title(getResources().getString(R.string.marker_finish))
             .alpha(0.5f));
+        
+        // Get map bounds from bounding box
+        double sizeLat = north - south;
+        double sizeLon = east - west;
+        LatLng southwest = new LatLng(south - sizeLat*0.1, west - sizeLon*0.1);
+        LatLng northeast = new LatLng(north + sizeLat*0.2, east + sizeLon*0.1);
+        LatLngBounds bounds = new LatLngBounds(southwest, northeast);
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 10);
+        map.moveCamera(cameraUpdate);
     }
 
     private void drawGraph() {

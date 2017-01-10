@@ -3,6 +3,7 @@ package emp.fri.si.instarun;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -57,6 +58,11 @@ public class FeedActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.logo);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            getSupportActionBar().hide();
+        else
+            getSupportActionBar().show();
 
         // No need to do anything else but bind FAB on first time
         if (firstTime) return;
@@ -114,5 +120,15 @@ public class FeedActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            getSupportActionBar().hide();
+        else
+            getSupportActionBar().show();
     }
 }
